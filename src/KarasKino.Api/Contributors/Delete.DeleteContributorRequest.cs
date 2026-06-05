@@ -1,4 +1,4 @@
-﻿namespace KarasKino.Web.Contributors;
+﻿namespace KarasKino.Api.Contributors;
 
 public record DeleteContributorRequest
 {

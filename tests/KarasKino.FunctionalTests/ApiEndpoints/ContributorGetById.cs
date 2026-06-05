@@ -1,6 +1,5 @@
 ﻿using KarasKino.Api.Contributors;
 using KarasKino.Infrastructure.Data;
-using KarasKino.Web.Contributors;
 
 
 namespace KarasKino.FunctionalTests.ApiEndpoints;

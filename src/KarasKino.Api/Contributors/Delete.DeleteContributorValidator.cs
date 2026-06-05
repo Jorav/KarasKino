@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using KarasKino.Web.Contributors;
 
 namespace KarasKino.Api.Contributors;
 

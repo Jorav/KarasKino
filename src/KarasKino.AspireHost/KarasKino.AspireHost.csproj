@@ -1,4 +1,4 @@
-<Project Sdk="Aspire.AppHost.Sdk/13.0.0">
+﻿<Project Sdk="Aspire.AppHost.Sdk/13.0.0">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -16,11 +16,13 @@
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" />
+    <PackageReference Include="Aspire.Hosting.NodeJs" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\KarasKino.Api\KarasKino.Api.csproj" />
+    <ProjectReference Include="..\KarasKino.WebApp\KarasKino.WebApp.esproj" />
   </ItemGroup>
   <ItemGroup>
     <!-- The IsAspireProjectResource attribute tells .NET Aspire to treat this 

@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using Google.Protobuf.WellKnownTypes;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -25,14 +26,18 @@ var papercut = builder.AddContainer("papercut", "jijiechen/papercut", "latest")
   });
 
 // Add the web project with the database connection
-builder.AddProject<Projects.KarasKino_Api>("api")
+var api = builder.AddProject<Projects.KarasKino_Api>("api")
   .WithReference(karasKinoDb)
   .WithEnvironment("ASPNETCORE_ENVIRONMENT", builder.Environment.EnvironmentName)
   .WithEnvironment("Papercut__Smtp__Url", papercut.GetEndpoint("smtp"))
   .WaitFor(karasKinoDb)
   .WaitFor(papercut);
 
-//builder.AddProject<Projects.KarasKino_Web>("frontend");
+//builder.AddProject<Projects.KarasKino_WebApp>("frontend");
+builder.AddNpmApp("frontend", "../KarasKino.WebApp")
+    .WithReference(api)
+    .WithHttpEndpoint(env: "PORT")
+    .WithExternalHttpEndpoints();
 
 builder
   .Build()
