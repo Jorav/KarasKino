@@ -4,6 +4,7 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
+
   <Folder Name="/Solution Items/">
     <File Path=".editorconfig" />
     <File Path=".gitignore" />
@@ -12,23 +13,34 @@
     <File Path="Directory.Build.props" />
     <File Path="Directory.Packages.props" />
   </Folder>
+
   <Folder Name="/src/">
+    <Project Path="src/KarasKino.WebApp/KarasKino.WebApp.esproj">
+      <Platform Project="AnyCPU" />
+      <Build />
+      <Deploy />
+    </Project>
+
     <Project Path="src/KarasKino.Api/KarasKino.Api.csproj" />
     <Project Path="src/KarasKino.Core/KarasKino.Core.csproj" />
     <Project Path="src/KarasKino.Infrastructure/KarasKino.Infrastructure.csproj" />
     <Project Path="src/KarasKino.UseCases/KarasKino.UseCases.csproj" />
   </Folder>
+
   <Folder Name="/src/_aspire/">
     <Project Path="src/KarasKino.AspireHost/KarasKino.AspireHost.csproj" />
     <Project Path="src/KarasKino.ServiceDefaults/KarasKino.ServiceDefaults.csproj" />
   </Folder>
+
   <Folder Name="/tests/">
     <Project Path="tests/KarasKino.FunctionalTests/KarasKino.FunctionalTests.csproj">
       <BuildDependency Project="src/KarasKino.Api/KarasKino.Api.csproj" />
     </Project>
+
     <Project Path="tests/KarasKino.IntegrationTests/KarasKino.IntegrationTests.csproj">
       <BuildDependency Project="src/KarasKino.Infrastructure/KarasKino.Infrastructure.csproj" />
     </Project>
+
     <Project Path="tests/KarasKino.UnitTests/KarasKino.UnitTests.csproj" />
   </Folder>
 </Solution>
