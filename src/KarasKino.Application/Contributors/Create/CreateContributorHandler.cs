@@ -1,6 +1,6 @@
 ﻿using KarasKino.Core.ContributorAggregate;
 
-namespace KarasKino.UseCases.Contributors.Create;
+namespace KarasKino.Application.Contributors.Create;
 
 public class CreateContributorHandler(IRepository<Contributor> _repository)
   : ICommandHandler<CreateContributorCommand, Result<ContributorId>>

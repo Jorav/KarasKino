@@ -1,7 +1,7 @@
 ﻿using KarasKino.Api.Extensions;
+using KarasKino.Application.Contributors;
+using KarasKino.Application.Contributors.Get;
 using KarasKino.Core.ContributorAggregate;
-using KarasKino.UseCases.Contributors;
-using KarasKino.UseCases.Contributors.Get;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace KarasKino.Api.Contributors;

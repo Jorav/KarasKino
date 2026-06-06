@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\KarasKino.Infrastructure\KarasKino.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\KarasKino.UseCases\KarasKino.UseCases.csproj" />
+    <ProjectReference Include="..\..\src\KarasKino.Application\KarasKino.Application.csproj" />
     <ProjectReference Include="..\..\src\KarasKino.Api\KarasKino.Api.csproj" />
   </ItemGroup>
 

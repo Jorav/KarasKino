@@ -24,6 +24,6 @@
   
   <ItemGroup>
     <ProjectReference Include="..\KarasKino.Core\KarasKino.Core.csproj" />
-    <ProjectReference Include="..\KarasKino.UseCases\KarasKino.UseCases.csproj" />
+    <ProjectReference Include="..\KarasKino.Application\KarasKino.Application.csproj" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
-﻿using KarasKino.Core.ContributorAggregate;
-using KarasKino.UseCases.Contributors;
-using KarasKino.UseCases.Contributors.List;
+﻿using KarasKino.Application;
+using KarasKino.Application.Contributors;
+using KarasKino.Application.Contributors.List;
+using KarasKino.Core.ContributorAggregate;
 
 namespace KarasKino.Infrastructure.Data.Queries;
 
@@ -14,7 +15,7 @@ public class ListContributorsQueryService : IListContributorsQueryService
     _db = db;
   }
 
-  public async Task<UseCases.PagedResult<ContributorDto>> ListAsync(int page, int perPage)
+  public async Task<PagedResult<ContributorDto>> ListAsync(int page, int perPage)
   {
     var items = await _db.Contributors.FromSqlRaw("SELECT Id, Name, PhoneNumber_CountryCode, PhoneNumber_Number, PhoneNumber_Extension FROM Contributors") // don't fetch other big columns
       .OrderBy(c => c.Id)
@@ -26,7 +27,7 @@ public class ListContributorsQueryService : IListContributorsQueryService
 
     int totalCount = await _db.Contributors.CountAsync();
     int totalPages = (int)Math.Ceiling(totalCount / (double)perPage);
-    var result = new UseCases.PagedResult<ContributorDto>(items, page, perPage, totalCount, totalPages);
+    var result = new Application.PagedResult<ContributorDto>(items, page, perPage, totalCount, totalPages);
 
     return result;
   }

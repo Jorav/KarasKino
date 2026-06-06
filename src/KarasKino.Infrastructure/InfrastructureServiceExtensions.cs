@@ -1,8 +1,8 @@
-﻿using KarasKino.Core.Interfaces;
+﻿using KarasKino.Application.Contributors.List;
+using KarasKino.Core.Interfaces;
 using KarasKino.Core.Services;
 using KarasKino.Infrastructure.Data;
 using KarasKino.Infrastructure.Data.Queries;
-using KarasKino.UseCases.Contributors.List;
 
 namespace KarasKino.Infrastructure;
 

@@ -40,7 +40,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\KarasKino.Core\KarasKino.Core.csproj" />
-    <ProjectReference Include="..\..\src\KarasKino.UseCases\KarasKino.UseCases.csproj" />
+    <ProjectReference Include="..\..\src\KarasKino.Application\KarasKino.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 ﻿using KarasKino.Core.Interfaces;
 
-namespace KarasKino.UseCases.Contributors.Delete;
+namespace KarasKino.Application.Contributors.Delete;
 
 public class DeleteContributorHandler(IDeleteContributorService _deleteContributorService)
   : ICommandHandler<DeleteContributorCommand, Result>

@@ -1,7 +1,7 @@
 ﻿using Ardalis.SharedKernel;
+using KarasKino.Application.Contributors.Create;
 using KarasKino.Core.ContributorAggregate;
 using KarasKino.Infrastructure;
-using KarasKino.UseCases.Contributors.Create;
 
 namespace KarasKino.Api.Configurations;
 
@@ -21,7 +21,7 @@ public static class MediatorConfig
       options.Assemblies =
       [
         typeof(Contributor),                       // Core
-        typeof(CreateContributorCommand),         // UseCases
+        typeof(CreateContributorCommand),         // Application
         typeof(InfrastructureServiceExtensions), // Infrastructure
         typeof(MediatorConfig)                  // Web
       ];

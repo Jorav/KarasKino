@@ -1,4 +1,6 @@
-﻿namespace KarasKino.UnitTests.UseCases.Contributors;
+﻿using KarasKino.Application.Contributors.Create;
+
+namespace KarasKino.UnitTests.Application.Contributors;
 
 public class CreateContributorHandlerHandle
 {

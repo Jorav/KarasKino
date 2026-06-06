@@ -1,4 +1,4 @@
-﻿namespace KarasKino.UseCases;
+﻿namespace KarasKino.Application;
 
 public record PagedResult<T>(
   IReadOnlyList<T> Items,

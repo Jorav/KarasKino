@@ -1,7 +1,7 @@
 ﻿global using System.Runtime.CompilerServices;
 global using Ardalis.SharedKernel;
 global using KarasKino.Core.ContributorAggregate;
-global using KarasKino.UseCases.Contributors.Create;
+global using KarasKino.Application.Contributors.Create;
 global using Shouldly;
 global using Mediator;
 global using Microsoft.Extensions.Logging;

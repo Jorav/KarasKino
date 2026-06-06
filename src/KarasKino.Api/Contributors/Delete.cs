@@ -1,6 +1,6 @@
 ﻿using KarasKino.Api.Extensions;
+using KarasKino.Application.Contributors.Delete;
 using KarasKino.Core.ContributorAggregate;
-using KarasKino.UseCases.Contributors.Delete;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace KarasKino.Api.Contributors;

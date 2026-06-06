@@ -1,4 +1,6 @@
-﻿namespace KarasKino.UseCases.Contributors.List;
+﻿using KarasKino.Application.Contributors;
+
+namespace KarasKino.Application.Contributors.List;
 
 public class ListContributorsHandler : IQueryHandler<ListContributorsQuery, Result<PagedResult<ContributorDto>>>
 {

@@ -1,6 +1,6 @@
 ﻿using KarasKino.Core.ContributorAggregate;
 
-namespace KarasKino.UseCases.Contributors.Create;
+namespace KarasKino.Application.Contributors.Create;
 
 /// <summary>
 /// Create a new Contributor.

@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using KarasKino.Core.ContributorAggregate;
-using KarasKino.UseCases.Contributors.Create;
 using FluentValidation;
 using Microsoft.AspNetCore.Http.HttpResults;
 using KarasKino.Api.Extensions;
+using KarasKino.Application.Contributors.Create;
 
 namespace KarasKino.Api.Contributors;
 

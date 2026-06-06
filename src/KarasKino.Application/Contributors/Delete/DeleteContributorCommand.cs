@@ -1,5 +1,5 @@
 ﻿using KarasKino.Core.ContributorAggregate;
 
-namespace KarasKino.UseCases.Contributors.Delete;
+namespace KarasKino.Application.Contributors.Delete;
 
 public record DeleteContributorCommand(ContributorId ContributorId) : ICommand<Result>;

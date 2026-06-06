@@ -1,7 +1,8 @@
-﻿using KarasKino.Core.ContributorAggregate;
+﻿using KarasKino.Application.Contributors;
+using KarasKino.Core.ContributorAggregate;
 using KarasKino.Core.ContributorAggregate.Specifications;
 
-namespace KarasKino.UseCases.Contributors.Get;
+namespace KarasKino.Application.Contributors.Get;
 
 /// <summary>
 /// Queries don't necessarily need to use repository methods, but they can if it's convenient

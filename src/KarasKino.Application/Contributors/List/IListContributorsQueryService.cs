@@ -1,4 +1,6 @@
-﻿namespace KarasKino.UseCases.Contributors.List;
+﻿using KarasKino.Application.Contributors;
+
+namespace KarasKino.Application.Contributors.List;
 
 /// <summary>
 /// Represents a service that will actually fetch the necessary data
@@ -6,5 +8,5 @@
 /// </summary>
 public interface IListContributorsQueryService
 {
-  Task<UseCases.PagedResult<ContributorDto>> ListAsync(int page, int perPage);
+  Task<PagedResult<ContributorDto>> ListAsync(int page, int perPage);
 }

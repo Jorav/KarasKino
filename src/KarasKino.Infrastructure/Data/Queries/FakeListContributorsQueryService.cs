@@ -1,12 +1,13 @@
-﻿using KarasKino.Core.ContributorAggregate;
-using KarasKino.UseCases.Contributors;
-using KarasKino.UseCases.Contributors.List;
+﻿using KarasKino.Application;
+using KarasKino.Application.Contributors;
+using KarasKino.Application.Contributors.List;
+using KarasKino.Core.ContributorAggregate;
 
 namespace KarasKino.Infrastructure.Data.Queries;
 
 public class FakeListContributorsQueryService : IListContributorsQueryService
 {
-  public Task<UseCases.PagedResult<ContributorDto>> ListAsync(int page, int perPage)
+  public Task<PagedResult<ContributorDto>> ListAsync(int page, int perPage)
   {
     var items = new List<ContributorDto>();
     for (int i = 1; i <= 25; i++)
@@ -16,7 +17,7 @@ public class FakeListContributorsQueryService : IListContributorsQueryService
     }
 
     int totalPages = (int)Math.Ceiling(items.Count / (double)perPage);
-    var result = new UseCases.PagedResult<ContributorDto>(items, page, perPage, items.Count, totalPages);
+    var result = new Application.PagedResult<ContributorDto>(items, page, perPage, items.Count, totalPages);
     return Task.FromResult(result);
   }
 }

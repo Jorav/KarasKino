@@ -1,6 +1,7 @@
-﻿using KarasKino.Core.ContributorAggregate;
+﻿using KarasKino.Application.Contributors;
+using KarasKino.Core.ContributorAggregate;
 
-namespace KarasKino.UseCases.Contributors.Update;
+namespace KarasKino.Application.Contributors.Update;
 
 public class UpdateContributorHandler(IRepository<Contributor> _repository)
   : ICommandHandler<UpdateContributorCommand, Result<ContributorDto>>

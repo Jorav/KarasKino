@@ -1,7 +1,8 @@
 ﻿using KarasKino.Core.ContributorAggregate;
-using KarasKino.UseCases.Contributors;
-using KarasKino.UseCases.Contributors.List;
 using FluentValidation;
+using KarasKino.Application;
+using KarasKino.Application.Contributors;
+using KarasKino.Application.Contributors.List;
 
 namespace KarasKino.Api.Contributors;
 
@@ -29,7 +30,7 @@ public class List(IMediator mediator) : Endpoint<ListContributorsRequest, Contri
 
       // Document pagination parameters
       s.Params["page"] = "1-based page index (default 1)";
-      s.Params["per_page"] = $"Page size 1–{UseCases.Constants.MAX_PAGE_SIZE} (default {UseCases.Constants.DEFAULT_PAGE_SIZE})";
+      s.Params["per_page"] = $"Page size 1–{Constants.MAX_PAGE_SIZE} (default {Constants.DEFAULT_PAGE_SIZE})";
 
       // Document possible responses
       s.Responses[200] = "Paginated list of contributors returned successfully";
@@ -92,10 +93,10 @@ public sealed class ListContributorsRequest
 
   // Bind to ?per_page=
   [BindFrom("per_page")]
-  public int PerPage { get; init; } = UseCases.Constants.DEFAULT_PAGE_SIZE;
+  public int PerPage { get; init; } = Constants.DEFAULT_PAGE_SIZE;
 }
 
-public record ContributorListResponse : UseCases.PagedResult<ContributorRecord>
+public record ContributorListResponse : Application.PagedResult<ContributorRecord>
 {
   public ContributorListResponse(IReadOnlyList<ContributorRecord> Items, int Page, int PerPage, int TotalCount, int TotalPages)
     : base(Items, Page, PerPage, TotalCount, TotalPages)
@@ -113,15 +114,15 @@ public sealed class ListContributorsValidator : Validator<ListContributorsReques
       .WithMessage("page must be >= 1");
 
     RuleFor(x => x.PerPage)
-      .InclusiveBetween(1, UseCases.Constants.MAX_PAGE_SIZE)
-      .WithMessage($"per_page must be between 1 and {UseCases.Constants.MAX_PAGE_SIZE}");
+      .InclusiveBetween(1, Constants.MAX_PAGE_SIZE)
+      .WithMessage($"per_page must be between 1 and {Constants.MAX_PAGE_SIZE}");
   }
 }
 
 public sealed class ListContributorsMapper
-  : Mapper<ListContributorsRequest, ContributorListResponse, UseCases.PagedResult<ContributorDto>>
+  : Mapper<ListContributorsRequest, ContributorListResponse, Application.PagedResult<ContributorDto>>
 {
-  public override ContributorListResponse FromEntity(UseCases.PagedResult<ContributorDto> e)
+  public override ContributorListResponse FromEntity(Application.PagedResult<ContributorDto> e)
   {
     var items = e.Items
       .Select(c => new ContributorRecord(c.Id.Value, c.Name.Value, c.PhoneNumber.ToString()))

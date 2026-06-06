@@ -33,7 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\KarasKino.Infrastructure\KarasKino.Infrastructure.csproj" />
-    <ProjectReference Include="..\KarasKino.UseCases\KarasKino.UseCases.csproj" />
+    <ProjectReference Include="..\KarasKino.Application\KarasKino.Application.csproj" />
     <ProjectReference Include="..\KarasKino.ServiceDefaults\KarasKino.ServiceDefaults.csproj" />
   </ItemGroup>
 
