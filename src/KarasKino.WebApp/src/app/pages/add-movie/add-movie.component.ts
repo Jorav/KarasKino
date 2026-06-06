@@ -47,7 +47,6 @@ export class AddMovieComponent {
       this.tmdbError = 'Could not extract a valid IMDB ID from that link.';
       return;
     }
-
     this.isLoadingTmdb = true;
     this.tmdbError = null;
 
