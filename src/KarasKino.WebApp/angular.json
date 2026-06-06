@@ -74,7 +74,8 @@
           },
           "defaultConfiguration": "development",
           "options": {
-            "port": 61416
+            "port": 61416,
+            "proxyConfig": "proxy.conf.js"
           }
         },
         "test": {

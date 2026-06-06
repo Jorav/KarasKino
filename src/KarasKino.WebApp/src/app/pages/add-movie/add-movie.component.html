@@ -1,0 +1,99 @@
+<div class="add-movie">
+  <h1 class="add-movie__title">Add a Movie</h1>
+
+  <form [formGroup]="form" (ngSubmit)="submit()">
+
+    <!-- IMDB Lookup -->
+    <section class="add-movie__section">
+      <h2 class="add-movie__section-title">IMDB Lookup</h2>
+      <div class="add-movie__field">
+        <label for="imdbLink">IMDB Link</label>
+        <div class="add-movie__imdb-row">
+          <input id="imdbLink"
+                 formControlName="imdbLink"
+                 type="text"
+                 placeholder="https://www.imdb.com/title/tt0111161/" />
+          <button type="button"
+                  class="btn btn--secondary"
+                  (click)="lookupMovie()"
+                  [disabled]="isLoadingTmdb">
+            {{ isLoadingTmdb ? 'Looking up...' : 'Lookup' }}
+          </button>
+        </div>
+        <span class="add-movie__error" *ngIf="tmdbError">{{ tmdbError }}</span>
+      </div>
+    </section>
+
+    <!-- Movie Details -->
+    <section class="add-movie__section">
+      <h2 class="add-movie__section-title">Movie Details</h2>
+
+      <div class="add-movie__details-grid">
+        <div class="add-movie__poster-preview" *ngIf="posterPreview">
+          <img [src]="posterPreview" [alt]="form.get('title')?.value" />
+        </div>
+
+        <div class="add-movie__fields">
+          <div class="add-movie__field">
+            <label for="title">Title</label>
+            <input id="title" formControlName="title" type="text" />
+          </div>
+
+          <div class="add-movie__field">
+            <label for="director">Director</label>
+            <input id="director" formControlName="director" type="text" />
+          </div>
+
+          <div class="add-movie__field">
+            <label for="year">Year</label>
+            <input id="year" formControlName="year" type="number" />
+          </div>
+
+          <div class="add-movie__field">
+            <label for="description">Description</label>
+            <textarea id="description" formControlName="description" rows="4"></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Watched By -->
+    <section class="add-movie__section">
+      <h2 class="add-movie__section-title">Watched By</h2>
+      <div class="add-movie__watched">
+        <label class="add-movie__checkbox">
+          <input type="checkbox" formControlName="watchedByKara" />
+          <span>Kara</span>
+        </label>
+        <label class="add-movie__checkbox">
+          <input type="checkbox" formControlName="watchedByJohan" />
+          <span>Johan</span>
+        </label>
+      </div>
+    </section>
+
+    <!-- Achievements -->
+    <section class="add-movie__section">
+      <h2 class="add-movie__section-title">Achievements</h2>
+      <div formArrayName="achievements">
+        <div *ngFor="let achievement of achievements.controls; let i = index"
+             [formGroupName]="i"
+             class="add-movie__achievement">
+          <input formControlName="description" type="text" placeholder="e.g. Won Best Picture at Oscars" />
+          <button type="button" class="btn btn--danger" (click)="removeAchievement(i)">Remove</button>
+        </div>
+      </div>
+      <button type="button" class="btn btn--secondary" (click)="addAchievement()">
+        + Add Achievement
+      </button>
+    </section>
+
+    <!-- Submit -->
+    <div class="add-movie__actions">
+      <button type="submit" class="btn btn--primary" [disabled]="form.invalid">
+        Save Movie
+      </button>
+    </div>
+
+  </form>
+</div>

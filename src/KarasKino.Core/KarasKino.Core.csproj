@@ -21,4 +21,8 @@
     <PackageReference Include="Vogen" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Movies\Services\" />
+  </ItemGroup>
+
 </Project>

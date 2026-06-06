@@ -20,6 +20,7 @@
     <PackageReference Include="NimblePros.Metronome" />
     <PackageReference Include="Vogen" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" />
   </ItemGroup>
   
   <ItemGroup>

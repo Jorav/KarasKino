@@ -3,6 +3,7 @@ using KarasKino.Core.Interfaces;
 using KarasKino.Core.Services;
 using KarasKino.Infrastructure.Data;
 using KarasKino.Infrastructure.Data.Queries;
+using KarasKino.Infrastructure.Movies;
 
 namespace KarasKino.Infrastructure;
 
@@ -33,6 +34,7 @@ public static class InfrastructureServiceExtensions
             .AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>))
             .AddScoped<IListContributorsQueryService, ListContributorsQueryService>()
             .AddScoped<IDeleteContributorService, DeleteContributorService>();
+    services.AddMovieServices(config);
 
     logger.LogInformation("{Project} services registered", "Infrastructure");
 
