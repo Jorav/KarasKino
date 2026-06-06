@@ -1,5 +1,4 @@
 ﻿using System.Net.Sockets;
-using Google.Protobuf.WellKnownTypes;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -30,6 +29,7 @@ var api = builder.AddProject<Projects.KarasKino_Api>("api")
   .WithReference(karasKinoDb)
   .WithEnvironment("ASPNETCORE_ENVIRONMENT", builder.Environment.EnvironmentName)
   .WithEnvironment("Papercut__Smtp__Url", papercut.GetEndpoint("smtp"))
+  .WithEnvironment("SecretsPath", Path.Combine(builder.AppHostDirectory, "..", "..", "secrets", "local.secrets.json"))
   .WaitFor(karasKinoDb)
   .WaitFor(papercut);
 

@@ -5,6 +5,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults()    // This sets up OpenTelemetry logging
        .AddLoggerConfigs();     // This adds Serilog for console formatting
 
+
+var secretsPath = builder.Configuration["SecretsPath"];
+if (!string.IsNullOrEmpty(secretsPath))
+{
+  builder.Configuration.AddJsonFile(secretsPath, optional: true, reloadOnChange: false);
+}
+
 using var loggerFactory = LoggerFactory.Create(config => config.AddConsole());
 var startupLogger = loggerFactory.CreateLogger<Program>();
 
