@@ -132,3 +132,4 @@ __pycache__/
 
 # Secrets
 secrets.json
+/local.secrets.json
