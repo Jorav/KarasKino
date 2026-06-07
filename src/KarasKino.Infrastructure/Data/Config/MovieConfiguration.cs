@@ -18,5 +18,8 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
 
     builder.Property(m => m.Genres)
       .HasColumnType("text[]");
+
+    builder.HasIndex(m => m.ImdbId)
+           .IsUnique();
   }
 }
