@@ -1,4 +1,4 @@
-﻿using KarasKino.Core.ContributorAggregate;
+﻿/*using KarasKino.Core.ContributorAggregate;
 
 namespace KarasKino.Infrastructure.Data;
 
@@ -28,3 +28,4 @@ public static class SeedData
     await dbContext.SaveChangesAsync();
   }
 }
+*/

@@ -35,6 +35,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Application\" />
     <Folder Include="Core\Services\" />
   </ItemGroup>
 

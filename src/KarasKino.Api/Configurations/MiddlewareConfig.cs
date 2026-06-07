@@ -85,7 +85,7 @@ public static class MiddlewareConfig
     {
       logger.LogInformation("Seeding database...");
       var context = services.GetRequiredService<AppDbContext>();
-      await SeedData.InitializeAsync(context);
+      //await SeedData.InitializeAsync(context);
       logger.LogInformation("Database seeded successfully");
     }
     catch (Exception ex)

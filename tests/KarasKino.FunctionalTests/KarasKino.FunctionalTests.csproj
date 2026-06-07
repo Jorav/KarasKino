@@ -31,4 +31,8 @@
     <ProjectReference Include="..\..\src\KarasKino.Api\KarasKino.Api.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ApiEndpoints\" />
+  </ItemGroup>
+
 </Project>

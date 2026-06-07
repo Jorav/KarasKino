@@ -1,10 +1,7 @@
-﻿using KarasKino.Core.ContributorAggregate;
+﻿namespace KarasKino.Infrastructure.Data;
 
-namespace KarasKino.Infrastructure.Data;
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
 {
-  public DbSet<Contributor> Contributors => Set<Contributor>();
-
   protected override void OnModelCreating(ModelBuilder modelBuilder)
   {
     base.OnModelCreating(modelBuilder);
