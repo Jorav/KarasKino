@@ -1,9 +1,12 @@
-﻿using KarasKino.UseCases.Movies.FindByImdbId;
+﻿using Ardalis.Result;
+using KarasKino.Application.Movies.FindByImdbId;
+using KarasKino.UseCases.Movies.FindByImdbId;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Wolverine;
 
 namespace KarasKino.Api.Movies.FindByImdbId;
 
-public class FindByImdbId(IMediator mediator)
+public class FindByImdbId(IMessageBus bus)
   : Endpoint<FindByImdbIdRequest,
              Results<Ok<FindByImdbIdResponse>,
                      NotFound,
@@ -27,7 +30,8 @@ public class FindByImdbId(IMediator mediator)
   public override async Task<Results<Ok<FindByImdbIdResponse>, NotFound, ProblemHttpResult>>
     ExecuteAsync(FindByImdbIdRequest req, CancellationToken ct)
   {
-    var result = await mediator.Send(new FindByImdbIdQuery(req.ImdbId), ct);
+    var result = await bus.InvokeAsync<Result<MovieLookupResult>>(
+      new FindByImdbIdQuery(req.ImdbId), ct);
 
     if (result.IsNotFound())
       return TypedResults.NotFound();

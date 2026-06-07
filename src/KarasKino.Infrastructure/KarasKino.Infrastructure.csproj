@@ -21,6 +21,8 @@
     <PackageReference Include="Vogen" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" />
+    <PackageReference Include="WolverineFx" />
+    <PackageReference Include="WolverineFx.Postgresql" />
   </ItemGroup>
   
   <ItemGroup>

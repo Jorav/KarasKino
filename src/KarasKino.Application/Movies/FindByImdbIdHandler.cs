@@ -1,16 +1,15 @@
-﻿using Ardalis.Result;
-using KarasKino.Core.Movies.Interfaces;
+﻿using KarasKino.Core.Movies.Interfaces;
+using KarasKino.UseCases.Movies.FindByImdbId;
 
-namespace KarasKino.UseCases.Movies.FindByImdbId;
+namespace KarasKino.Application.Movies.FindByImdbId;
 
 public class FindByImdbIdHandler(ITmdbService tmdbService)
-  : IQueryHandler<FindByImdbIdQuery, Result<MovieLookupResult>>
 {
-  public async ValueTask<Result<MovieLookupResult>> Handle(
+  public async Task<Result<MovieLookupResult>> Handle(
     FindByImdbIdQuery query,
-    CancellationToken cancellationToken)
+    CancellationToken ct)
   {
-    var result = await tmdbService.FindByImdbId(query.ImdbId, cancellationToken);
+    var result = await tmdbService.FindByImdbId(query.ImdbId, ct);
 
     if (result == null)
       return Result.NotFound();

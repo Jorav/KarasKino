@@ -36,7 +36,7 @@ public class TmdbService(TmdbClient tmdbClient, IOptions<TmdbConfiguration> conf
       details.Overview,
       posterUrl,
       director,
-      details.ReleaseDate,
+      details.ReleaseDate?.Year.ToString(),
       details.Runtime,
       imdbId,
       genres);

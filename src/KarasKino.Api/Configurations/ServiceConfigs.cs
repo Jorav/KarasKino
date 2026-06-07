@@ -8,8 +8,7 @@ public static class ServiceConfigs
 {
   public static IServiceCollection AddServiceConfigs(this IServiceCollection services, Microsoft.Extensions.Logging.ILogger logger, WebApplicationBuilder builder)
   {
-    services.AddInfrastructureServices(builder.Configuration, logger)
-            .AddMediatorSourceGen(logger);
+    services.AddInfrastructureServices(builder.Configuration, logger);
 
     if (builder.Environment.IsDevelopment())
     {
@@ -29,6 +28,4 @@ public static class ServiceConfigs
 
     return services;
   }
-
-
 }

@@ -13,8 +13,18 @@ public class TmdbMovieDetailsResponse
   [JsonPropertyName("poster_path")]
   public string? PosterPath { get; set; }
 
+  private string? _rawReleaseDate;
+
   [JsonPropertyName("release_date")]
-  public string? ReleaseDate { get; set; }
+  public string? RawReleaseDate
+  {
+    get => _rawReleaseDate;
+    set => _rawReleaseDate = value;
+  }
+
+  [JsonIgnore]
+  public DateTime? ReleaseDate =>
+    DateTime.TryParse(_rawReleaseDate, out var parsedDate) ? parsedDate : null;
 
   [JsonPropertyName("runtime")]
   public int? Runtime { get; set; }

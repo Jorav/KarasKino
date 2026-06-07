@@ -14,14 +14,12 @@ public static class InfrastructureServiceExtensions
     ConfigurationManager config,
     ILogger logger)
   {
-    // Aspire injects "karaskinodb" automatically via .WithReference(cleanArchDb)
-    // "DefaultConnection" is the fallback for running without Aspire
     string? connectionString = config.GetConnectionString("karaskinodb")
                                ?? config.GetConnectionString("DefaultConnection");
     Guard.Against.Null(connectionString);
 
     services.AddScoped<EventDispatchInterceptor>();
-    services.AddScoped<IDomainEventDispatcher, MediatorDomainEventDispatcher>();
+    services.AddScoped<IDomainEventDispatcher, WolverineDomainEventDispatcher>();
 
     services.AddDbContext<AppDbContext>((provider, options) =>
     {
@@ -31,9 +29,8 @@ public static class InfrastructureServiceExtensions
     });
 
     services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>))
-            .AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>))
-            .AddScoped<IListContributorsQueryService, ListContributorsQueryService>()
-            .AddScoped<IDeleteContributorService, DeleteContributorService>();
+            .AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
+
     services.AddMovieServices(config);
 
     logger.LogInformation("{Project} services registered", "Infrastructure");
