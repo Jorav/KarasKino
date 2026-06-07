@@ -132,3 +132,7 @@ __pycache__/
 
 # Secrets
 /secrets/local.secrets.json
+
+# Ignore Wolverine / JasperFx compiled artifacts
+**/Internal/Generated/
+/src/KarasKino.Api/Internal/Generated/WolverineHandlers/FindByImdbIdQueryHandler1486405896.cs
