@@ -7,6 +7,7 @@ $color-text-muted: #888;
 $color-accent: #e50914;
 $color-accent-hover: #f40612;
 $color-danger: #c0392b;
+$color-success: #27ae60;
 
 .add-movie {
   max-width: 860px;
@@ -84,6 +85,15 @@ $color-danger: #c0392b;
     color: $color-accent;
   }
 
+  &__db-result {
+    font-size: 0.8rem;
+    color: $color-text-muted;
+
+    &--found {
+      color: $color-success;
+    }
+  }
+
   &__details-grid {
     display: grid;
     grid-template-columns: auto 1fr;
@@ -126,27 +136,6 @@ $color-danger: #c0392b;
     }
   }
 
-  &__achievement {
-    display: flex;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
-
-    input {
-      flex: 1;
-      background: $color-surface-raised;
-      border: 1px solid $color-border;
-      border-radius: 4px;
-      color: $color-text;
-      padding: 0.6rem 0.75rem;
-      font-size: 0.95rem;
-      outline: none;
-
-      &:focus {
-        border-color: $color-accent;
-      }
-    }
-  }
-
   &__genres {
     display: flex;
     flex-wrap: wrap;
@@ -167,6 +156,8 @@ $color-danger: #c0392b;
   &__actions {
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
     margin-top: 1rem;
   }
 }

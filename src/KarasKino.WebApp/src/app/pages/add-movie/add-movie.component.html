@@ -16,11 +16,18 @@
           <button type="button"
                   class="btn btn--secondary"
                   (click)="lookupMovie()"
-                  [disabled]="isLoadingTmdb">
+                  [disabled]="isLoadingTmdb || isLoadingDb">
             {{ isLoadingTmdb ? 'Looking up...' : 'Lookup' }}
+          </button>
+          <button type="button"
+                  class="btn btn--secondary"
+                  (click)="getFromDb()"
+                  [disabled]="isLoadingTmdb || isLoadingDb">
+            {{ isLoadingDb ? 'Loading...' : 'Get' }}
           </button>
         </div>
         <span class="add-movie__error" *ngIf="tmdbError">{{ tmdbError }}</span>
+        <span class="add-movie__db-result" *ngIf="dbResult">{{ dbResult }}</span>
       </div>
     </section>
 

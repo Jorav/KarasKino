@@ -8,6 +8,10 @@ public class PostMovieHandler(IRepository<Movie> movies)
 {
   public async ValueTask<Result<Guid>> Handle(PostMovieCommand cmd, CancellationToken ct)
   {
+    var existing = await movies.FirstOrDefaultAsync(new MovieByImdbIdSpecification(cmd.ImdbId), ct);
+    if (existing is not null)
+      await movies.DeleteAsync(existing, ct);
+
     var movie = new Movie(
       cmd.Title,
       cmd.ImdbId,

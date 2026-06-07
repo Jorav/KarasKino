@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { MovieService, TmdbMovieResult } from '../../services/movie.service';
+import { MovieService, TmdbMovieResult, SavedMovieResult } from '../../services/movie.service';
 
 @Component({
   selector: 'app-add-movie',
@@ -14,9 +14,11 @@ import { MovieService, TmdbMovieResult } from '../../services/movie.service';
 export class AddMovieComponent {
   form: FormGroup;
   isLoadingTmdb = false;
+  isLoadingDb = false;
   isSaving = false;
   saveError: string | null = null;
   tmdbError: string | null = null;
+  dbResult: string | null = null;
   posterPreview: string | null = null;
 
   constructor(
@@ -45,8 +47,9 @@ export class AddMovieComponent {
 
   lookupMovie(): void {
     this.posterPreview = null;
-    this.isLoadingTmdb = true;
     this.tmdbError = null;
+    this.dbResult = null;
+    this.isLoadingTmdb = true;
 
     const link = this.form.get('imdbLink')?.value;
     const imdbId = this.extractImdbId(link);
@@ -79,6 +82,48 @@ export class AddMovieComponent {
           this.tmdbError = 'Something went wrong on our end. Please try again later.';
         } else {
           this.tmdbError = 'Something went wrong. Please try again.';
+        }
+      }
+    });
+  }
+
+  getFromDb(): void {
+    this.dbResult = null;
+    this.tmdbError = null;
+    this.isLoadingDb = true;
+
+    const link = this.form.get('imdbLink')?.value ?? '';
+    const imdbId = this.extractImdbId(link);
+
+    if (!imdbId) {
+      this.dbResult = 'Could not extract a valid IMDB ID from that link.';
+      this.isLoadingDb = false;
+      return;
+    }
+
+    this.movieService.getByImdbId(imdbId).subscribe({
+      next: (movie: SavedMovieResult) => {
+        this.form.patchValue({
+          title: movie.title,
+          description: movie.description,
+          posterUrl: movie.posterUrl,
+          director: movie.director,
+          releaseDate: movie.releaseYear,
+          runtime: movie.runtime,
+          genres: movie.genres,
+          watchedByKara: movie.watchedByKara,
+          watchedByJohan: movie.watchedByJohan
+        });
+        this.posterPreview = movie.posterUrl;
+        this.dbResult = 'Loaded from database.';
+        this.isLoadingDb = false;
+      },
+      error: (err) => {
+        this.isLoadingDb = false;
+        if (err.status === 404) {
+          this.dbResult = 'No saved entry found in database.';
+        } else {
+          this.dbResult = 'Something went wrong fetching from database.';
         }
       }
     });

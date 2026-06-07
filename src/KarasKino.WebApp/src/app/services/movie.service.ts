@@ -27,6 +27,20 @@ export interface AddMovieRequest {
   watchedByJohan: boolean;
 }
 
+export interface SavedMovieResult {
+  id: string;
+  title: string;
+  imdbId: string;
+  description: string | null;
+  posterUrl: string | null;
+  director: string | null;
+  releaseYear: string | null;
+  runtime: number | null;
+  genres: string[];
+  watchedByKara: boolean;
+  watchedByJohan: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -42,5 +56,8 @@ export class MovieService {
   }
   addMovie(request: AddMovieRequest): Observable<string> {
     return this.http.post<string>(`${this.apiUrl}/movies`, request);
+  }
+  getByImdbId(imdbId: string): Observable<SavedMovieResult> {
+    return this.http.get<SavedMovieResult>(`${this.apiUrl}/movies/${imdbId}`);
   }
 }
