@@ -5,6 +5,8 @@ public record TmdbMovieResult(
   string? Description,
   string? PosterUrl,
   string? Director,
-  int? Year,
-  string? ImdbId
+  string? ReleaseDate,
+  int? Runtime,
+  string? ImdbId,
+  List<string> Genres
 );

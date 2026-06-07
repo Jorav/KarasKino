@@ -6,26 +6,39 @@ namespace KarasKino.Infrastructure.Movies;
 
 public class TmdbService(TmdbClient tmdbClient, IOptions<TmdbConfiguration> config) : ITmdbService
 {
-  public async Task<TmdbMovieResult?> FindByImdbId(string imdbId, CancellationToken ct)
+  private readonly TmdbConfiguration _config = config.Value;
+
+  public async Task<TmdbMovieResult?> FindByImdbId(string imdbId, CancellationToken ct = default)
   {
-    var response = await tmdbClient.FindByImdbId(imdbId, ct);
-    if (response == null || response.MovieResults.Count == 0)
+    var findResponse = await tmdbClient.FindByImdbId(imdbId, ct);
+    if (findResponse == null || findResponse.MovieResults.Count == 0)
       return null;
 
-    var movie = response.MovieResults[0];
-    var posterUrl = movie.PosterPath != null
-      ? $"{config.Value.ImageBaseUrl}{movie.PosterPath}"
+    var tmdbId = findResponse.MovieResults[0].Id;
+
+    var details = await tmdbClient.GetMovieDetails(tmdbId, ct);
+    if (details == null)
+      return null;
+
+    var posterUrl = details.PosterPath != null
+      ? $"{_config.ImageBaseUrl}{details.PosterPath}"
       : null;
-    var year = movie.ReleaseDate?.Length >= 4
-      ? int.Parse(movie.ReleaseDate[..4])
-      : (int?)null;
+
+    var director = details.Credits.Crew
+      .FirstOrDefault(c => c.Job == "Director")?.Name;
+
+    var genres = details.Genres
+      .Select(g => g.Name)
+      .ToList();
 
     return new TmdbMovieResult(
-      movie.Title,
-      movie.Overview,
+      details.Title,
+      details.Overview,
       posterUrl,
-      null,
-      year,
-      imdbId);
+      director,
+      details.ReleaseDate,
+      details.Runtime,
+      imdbId,
+      genres);
   }
 }

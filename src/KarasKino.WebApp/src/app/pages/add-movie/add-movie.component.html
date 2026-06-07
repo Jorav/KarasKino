@@ -45,13 +45,25 @@
           </div>
 
           <div class="add-movie__field">
-            <label for="year">Year</label>
-            <input id="year" formControlName="year" type="number" />
+            <label for="releaseDate">Release Date</label>
+            <input id="releaseDate" formControlName="releaseDate" type="text" />
+          </div>
+
+          <div class="add-movie__field">
+            <label for="runtime">Runtime (minutes)</label>
+            <input id="runtime" formControlName="runtime" type="number" />
           </div>
 
           <div class="add-movie__field">
             <label for="description">Description</label>
             <textarea id="description" formControlName="description" rows="4"></textarea>
+          </div>
+
+          <div class="add-movie__field" *ngIf="genres.length > 0">
+            <label>Genres</label>
+            <div class="add-movie__genres">
+              <span class="add-movie__genre" *ngFor="let genre of genres">{{ genre }}</span>
+            </div>
           </div>
         </div>
       </div>

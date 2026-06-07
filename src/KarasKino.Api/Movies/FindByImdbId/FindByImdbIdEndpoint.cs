@@ -37,7 +37,9 @@ public class FindByImdbId(ITmdbService tmdbService)
       result.Description,
       result.PosterUrl,
       result.Director,
-      result.Year,
-      result.ImdbId));
+      result.ReleaseDate,
+      result.Runtime,
+      result.ImdbId,
+      result.Genres));
   }
 }

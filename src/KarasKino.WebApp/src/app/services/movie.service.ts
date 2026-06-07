@@ -8,8 +8,10 @@ export interface TmdbMovieResult {
   description: string | null;
   posterUrl: string | null;
   director: string | null;
-  year: number | null;
+  releaseDate: string | null;
+  runtime: number | null;
   imdbId: string | null;
+  genres: string[];
 }
 
 @Injectable({
