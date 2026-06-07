@@ -10,7 +10,7 @@
 
     <ItemGroup>
       <PackageReference Include="Ardalis.Result" />
-      <PackageReference Include="WolverineFx" />
+      <PackageReference Include="Mediator.Abstractions" />
     </ItemGroup>
 
     <ItemGroup>

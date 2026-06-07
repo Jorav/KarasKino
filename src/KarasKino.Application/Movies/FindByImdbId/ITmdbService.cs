@@ -1,6 +1,4 @@
-﻿using KarasKino.UseCases.Movies.FindByImdbId;
-
-namespace KarasKino.Core.Movies.Interfaces;
+﻿namespace KarasKino.Application.Movies.FindByImdbId;
 
 public interface ITmdbService
 {

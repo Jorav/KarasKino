@@ -24,7 +24,6 @@
     </PackageReference>
     <PackageReference Include="ReportGenerator" />
     <PackageReference Include="xunit" />
-    <PackageReference Include="WolverineFx" />
     <PackageReference Include="Ardalis.Specification" />
   </ItemGroup>
 

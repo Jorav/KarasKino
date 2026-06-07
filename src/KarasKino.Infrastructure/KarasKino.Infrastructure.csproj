@@ -20,12 +20,16 @@
     <PackageReference Include="NimblePros.Metronome" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="Microsoft.Extensions.Options.DataAnnotations" />
-    <PackageReference Include="WolverineFx" />
-    <PackageReference Include="WolverineFx.Postgresql" />
+    <PackageReference Include="Mediator.Abstractions" />
+    <PackageReference Include="Ardalis.Specification" />
   </ItemGroup>
   
   <ItemGroup>
     <ProjectReference Include="..\KarasKino.Core\KarasKino.Core.csproj" />
     <ProjectReference Include="..\KarasKino.Application\KarasKino.Application.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 </Project>

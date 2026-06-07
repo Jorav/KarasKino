@@ -1,11 +1,11 @@
-﻿using KarasKino.Core.Movies.Interfaces;
-using KarasKino.UseCases.Movies.FindByImdbId;
+﻿using Mediator;
 
 namespace KarasKino.Application.Movies.FindByImdbId;
 
 public class FindByImdbIdHandler(ITmdbService tmdbService)
+    : IQueryHandler<FindByImdbIdQuery, Result<MovieLookupResult>>
 {
-  public async Task<Result<MovieLookupResult>> Handle(
+  public async ValueTask<Result<MovieLookupResult>> Handle(
     FindByImdbIdQuery query,
     CancellationToken ct)
   {

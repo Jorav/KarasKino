@@ -1,4 +1,5 @@
-﻿using KarasKino.Infrastructure.Data;
+﻿using Ardalis.Specification;
+using KarasKino.Infrastructure.Data;
 using KarasKino.Infrastructure.Movies;
 
 namespace KarasKino.Infrastructure;
@@ -15,7 +16,7 @@ public static class InfrastructureServiceExtensions
     Guard.Against.Null(connectionString);
 
     services.AddScoped<EventDispatchInterceptor>();
-    services.AddScoped<IDomainEventDispatcher, WolverineDomainEventDispatcher>();
+    services.AddScoped<IDomainEventDispatcher, MediatorDomainEventDispatcher>();
 
     services.AddDbContext<AppDbContext>((provider, options) =>
     {
@@ -24,9 +25,8 @@ public static class InfrastructureServiceExtensions
       options.AddInterceptors(interceptor);
     });
 
-    services.AddScoped(typeof(IRepository<>), typeof(EfRepository<>))
-            .AddScoped(typeof(IReadRepository<>), typeof(EfRepository<>));
-
+    services.AddScoped(typeof(Core.Interfaces.IRepository<>), typeof(Repository<>))
+            .AddScoped(typeof(IRepositoryBase<>), typeof(AppRepository<>));
     services.AddMovieServices(config);
 
     logger.LogInformation("{Project} services registered", "Infrastructure");

@@ -33,7 +33,6 @@ var api = builder.AddProject<Projects.KarasKino_Api>("api")
   .WaitFor(karasKinoDb)
   .WaitFor(papercut);
 
-//builder.AddProject<Projects.KarasKino_WebApp>("frontend");
 builder.AddNpmApp("frontend", "../KarasKino.WebApp")
     .WithReference(api)
     .WithHttpEndpoint(env: "PORT")

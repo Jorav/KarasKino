@@ -132,6 +132,3 @@ __pycache__/
 
 # Secrets
 /secrets/local.secrets.json
-
-# Ignore Wolverine / JasperFx compiled artifacts
-**/Internal/Generated/

@@ -14,6 +14,19 @@ export interface TmdbMovieResult {
   genres: string[];
 }
 
+export interface AddMovieRequest {
+  imdbId: string;
+  title: string;
+  description: string | null;
+  posterUrl: string | null;
+  director: string | null;
+  releaseYear: string | null;
+  runtime: number | null;
+  genres: string[];
+  watchedByKara: boolean;
+  watchedByJohan: boolean;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,5 +39,8 @@ export class MovieService {
     return this.http.get<TmdbMovieResult>(`${this.apiUrl}/movies/search`, {
       params: { imdbId }
     });
+  }
+  addMovie(request: AddMovieRequest): Observable<string> {
+    return this.http.post<string>(`${this.apiUrl}/movies`, request);
   }
 }

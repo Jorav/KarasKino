@@ -84,26 +84,11 @@
       </div>
     </section>
 
-    <!-- Achievements -->
-    <section class="add-movie__section">
-      <h2 class="add-movie__section-title">Achievements</h2>
-      <div formArrayName="achievements">
-        <div *ngFor="let achievement of achievements.controls; let i = index"
-             [formGroupName]="i"
-             class="add-movie__achievement">
-          <input formControlName="description" type="text" placeholder="e.g. Won Best Picture at Oscars" />
-          <button type="button" class="btn btn--danger" (click)="removeAchievement(i)">Remove</button>
-        </div>
-      </div>
-      <button type="button" class="btn btn--secondary" (click)="addAchievement()">
-        + Add Achievement
-      </button>
-    </section>
-
     <!-- Submit -->
     <div class="add-movie__actions">
-      <button type="submit" class="btn btn--primary" [disabled]="form.invalid">
-        Save Movie
+      <span class="add-movie__error" *ngIf="saveError">{{ saveError }}</span>
+      <button type="submit" class="btn btn--primary" [disabled]="form.invalid || isSaving">
+        {{ isSaving ? 'Saving...' : 'Save Movie' }}
       </button>
     </div>
 

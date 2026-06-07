@@ -22,12 +22,12 @@
     <PackageReference Include="Ardalis.Result.AspNetCore" />
     <PackageReference Include="FastEndpoints" />
     <PackageReference Include="FastEndpoints.Swagger" />
-    <PackageReference Include="WolverineFx" />
-    <PackageReference Include="WolverineFx.Http" />
-    <PackageReference Include="WolverineFx.RuntimeCompilation" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" />
     <PackageReference Include="Scalar.AspNetCore" />
     <PackageReference Include="Serilog.AspNetCore" />
+    <PackageReference Include="Mediator.SourceGenerator" />
+    <PackageReference Include="Mediator.Abstractions" />
+    <PackageReference Include="Ardalis.Specification" />
   </ItemGroup>
 
   <ItemGroup>

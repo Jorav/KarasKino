@@ -1,4 +1,4 @@
-﻿namespace KarasKino.UseCases.Movies.FindByImdbId;
+﻿namespace KarasKino.Application.Movies.FindByImdbId;
 
 public record MovieLookupResult(
   string Title,

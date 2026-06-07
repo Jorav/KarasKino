@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { MovieService, TmdbMovieResult } from '../../services/movie.service';
 
 @Component({
@@ -13,10 +14,16 @@ import { MovieService, TmdbMovieResult } from '../../services/movie.service';
 export class AddMovieComponent {
   form: FormGroup;
   isLoadingTmdb = false;
+  isSaving = false;
+  saveError: string | null = null;
   tmdbError: string | null = null;
   posterPreview: string | null = null;
 
-  constructor(private fb: FormBuilder, private movieService: MovieService) {
+  constructor(
+    private fb: FormBuilder,
+    private movieService: MovieService,
+    private router: Router
+  ) {
     this.form = this.fb.group({
       imdbLink: ['', Validators.required],
       title: ['', Validators.required],
@@ -27,13 +34,8 @@ export class AddMovieComponent {
       runtime: [null],
       genres: [[]],
       watchedByKara: [false],
-      watchedByJohan: [false],
-      achievements: this.fb.array([])
+      watchedByJohan: [false]
     });
-  }
-
-  get achievements(): FormArray {
-    return this.form.get('achievements') as FormArray;
   }
 
   extractImdbId(link: string): string | null {
@@ -86,18 +88,32 @@ export class AddMovieComponent {
     return this.form.get('genres')?.value ?? [];
   }
 
-  addAchievement(): void {
-    this.achievements.push(this.fb.group({
-      description: ['', Validators.required]
-    }));
-  }
-
-  removeAchievement(index: number): void {
-    this.achievements.removeAt(index);
-  }
-
   submit(): void {
-    if (this.form.invalid) return;
-    console.log(this.form.value);
+    if (this.form.invalid || this.isSaving) return;
+
+    const link = this.form.get('imdbLink')?.value ?? '';
+    const imdbId = this.extractImdbId(link) ?? '';
+
+    this.isSaving = true;
+    this.saveError = null;
+
+    this.movieService.addMovie({
+      imdbId,
+      title: this.form.get('title')?.value,
+      description: this.form.get('description')?.value || null,
+      posterUrl: this.form.get('posterUrl')?.value || null,
+      director: this.form.get('director')?.value || null,
+      releaseYear: this.form.get('releaseDate')?.value || null,
+      runtime: this.form.get('runtime')?.value || null,
+      genres: this.form.get('genres')?.value ?? [],
+      watchedByKara: this.form.get('watchedByKara')?.value ?? false,
+      watchedByJohan: this.form.get('watchedByJohan')?.value ?? false
+    }).subscribe({
+      next: () => this.router.navigate(['/movies']),
+      error: () => {
+        this.isSaving = false;
+        this.saveError = 'Failed to save movie. Please try again.';
+      }
+    });
   }
 }

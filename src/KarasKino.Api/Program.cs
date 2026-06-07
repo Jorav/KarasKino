@@ -1,7 +1,4 @@
-﻿using JasperFx.Resources;
-using KarasKino.Api.Configurations;
-using Wolverine;
-using Wolverine.Postgresql;
+﻿using KarasKino.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,24 +30,6 @@ builder.Services.AddFastEndpoints()
                   };
                   o.ShortSchemaNames = true;
                 });
-
-builder.Host.UseWolverine(opts =>
-{
-  opts.CodeGeneration.TypeLoadMode = builder.Environment.IsDevelopment()
-        ? JasperFx.CodeGeneration.TypeLoadMode.Auto
-        : JasperFx.CodeGeneration.TypeLoadMode.Static;
-
-  var connectionString = builder.Configuration.GetConnectionString("karaskinodb")
-                         ?? builder.Configuration.GetConnectionString("DefaultConnection");
-
-  opts.UsePostgresqlPersistenceAndTransport(connectionString!, "wolverine").AutoProvision();
-
-  opts.Policies.AutoApplyTransactions();
-  opts.Policies.UseDurableLocalQueues();
-
-  opts.Discovery.IncludeAssembly(typeof(KarasKino.Application.Movies.FindByImdbId.FindByImdbIdHandler).Assembly);
-});
-builder.Services.AddResourceSetupOnStartup();
 
 var app = builder.Build();
 
