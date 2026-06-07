@@ -135,4 +135,3 @@ __pycache__/
 
 # Ignore Wolverine / JasperFx compiled artifacts
 **/Internal/Generated/
-/src/KarasKino.Api/Internal/Generated/WolverineHandlers/FindByImdbIdQueryHandler1486405896.cs
