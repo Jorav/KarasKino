@@ -1,6 +1,5 @@
 ﻿using KarasKino.Core.Movies.Interfaces;
-using KarasKino.Core.Movies.Model;
-using Microsoft.Extensions.Options;
+using KarasKino.UseCases.Movies.FindByImdbId;
 
 namespace KarasKino.Infrastructure.Movies;
 

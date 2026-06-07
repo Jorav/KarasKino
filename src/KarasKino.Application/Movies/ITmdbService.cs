@@ -1,4 +1,4 @@
-﻿using KarasKino.Core.Movies.Model;
+﻿using KarasKino.UseCases.Movies.FindByImdbId;
 
 namespace KarasKino.Core.Movies.Interfaces;
 
