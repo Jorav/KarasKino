@@ -1,6 +1,6 @@
-﻿namespace KarasKino.Core.Movies.Model;
+﻿namespace KarasKino.UseCases.Movies.FindByImdbId;
 
-public record TmdbMovieResult(
+public record MovieLookupResult(
   string Title,
   string? Description,
   string? PosterUrl,

@@ -1,9 +1,9 @@
-﻿using KarasKino.Core.Movies.Interfaces;
+﻿using KarasKino.UseCases.Movies.FindByImdbId;
 using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace KarasKino.Api.Movies.FindByImdbId;
 
-public class FindByImdbId(ITmdbService tmdbService)
+public class FindByImdbId(IMediator mediator)
   : Endpoint<FindByImdbIdRequest,
              Results<Ok<FindByImdbIdResponse>,
                      NotFound,
@@ -27,19 +27,19 @@ public class FindByImdbId(ITmdbService tmdbService)
   public override async Task<Results<Ok<FindByImdbIdResponse>, NotFound, ProblemHttpResult>>
     ExecuteAsync(FindByImdbIdRequest req, CancellationToken ct)
   {
-    var result = await tmdbService.FindByImdbId(req.ImdbId, ct);
+    var result = await mediator.Send(new FindByImdbIdQuery(req.ImdbId), ct);
 
-    if (result == null)
+    if (result.IsNotFound())
       return TypedResults.NotFound();
 
     return TypedResults.Ok(new FindByImdbIdResponse(
-      result.Title,
-      result.Description,
-      result.PosterUrl,
-      result.Director,
-      result.ReleaseDate,
-      result.Runtime,
-      result.ImdbId,
-      result.Genres));
+      result.Value.Title,
+      result.Value.Description,
+      result.Value.PosterUrl,
+      result.Value.Director,
+      result.Value.ReleaseDate,
+      result.Value.Runtime,
+      result.Value.ImdbId,
+      result.Value.Genres));
   }
 }

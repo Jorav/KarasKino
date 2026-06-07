@@ -4,5 +4,5 @@ namespace KarasKino.Core.Movies.Interfaces;
 
 public interface ITmdbService
 {
-  Task<TmdbMovieResult?> FindByImdbId(string imdbId, CancellationToken ct);
+  Task<MovieLookupResult?> FindByImdbId(string imdbId, CancellationToken ct);
 }

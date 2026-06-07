@@ -8,7 +8,7 @@ public class TmdbService(TmdbClient tmdbClient, IOptions<TmdbConfiguration> conf
 {
   private readonly TmdbConfiguration _config = config.Value;
 
-  public async Task<TmdbMovieResult?> FindByImdbId(string imdbId, CancellationToken ct = default)
+  public async Task<MovieLookupResult?> FindByImdbId(string imdbId, CancellationToken ct = default)
   {
     var findResponse = await tmdbClient.FindByImdbId(imdbId, ct);
     if (findResponse == null || findResponse.MovieResults.Count == 0)
@@ -31,7 +31,7 @@ public class TmdbService(TmdbClient tmdbClient, IOptions<TmdbConfiguration> conf
       .Select(g => g.Name)
       .ToList();
 
-    return new TmdbMovieResult(
+    return new MovieLookupResult(
       details.Title,
       details.Overview,
       posterUrl,
