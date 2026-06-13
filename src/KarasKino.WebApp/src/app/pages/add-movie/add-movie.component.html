@@ -3,7 +3,6 @@
 
   <form [formGroup]="form" (ngSubmit)="submit()">
 
-    <!-- IMDB Lookup -->
     <section class="add-movie__section">
       <h2 class="add-movie__section-title">IMDB Lookup</h2>
       <div class="add-movie__field">
@@ -31,14 +30,10 @@
       </div>
     </section>
 
-    <!-- Movie Details -->
     <section class="add-movie__section">
       <h2 class="add-movie__section-title">Movie Details</h2>
 
       <div class="add-movie__details-grid">
-        <div class="add-movie__poster-preview" *ngIf="posterPreview">
-          <img [src]="posterPreview" [alt]="form.get('title')?.value" />
-        </div>
 
         <div class="add-movie__fields">
           <div class="add-movie__field">
@@ -51,14 +46,16 @@
             <input id="director" formControlName="director" type="text" />
           </div>
 
-          <div class="add-movie__field">
-            <label for="releaseDate">Year</label>
-            <input id="releaseDate" formControlName="releaseDate" type="text" />
-          </div>
+          <div class="add-movie__row">
+            <div class="add-movie__field">
+              <label for="releaseDate">Year</label>
+              <input id="releaseDate" formControlName="releaseDate" type="text" />
+            </div>
 
-          <div class="add-movie__field">
-            <label for="runtime">Runtime (minutes)</label>
-            <input id="runtime" formControlName="runtime" type="number" />
+            <div class="add-movie__field">
+              <label for="runtime">Runtime (min)</label>
+              <input id="runtime" formControlName="runtime" type="number" />
+            </div>
           </div>
 
           <div class="add-movie__field">
@@ -73,10 +70,17 @@
             </div>
           </div>
         </div>
+
+        <div class="add-movie__poster-preview">
+          <img *ngIf="posterPreview" [src]="posterPreview" [alt]="form.get('title')?.value" />
+          <div *ngIf="!posterPreview" class="add-movie__poster-placeholder">
+            <span>No Poster</span>
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <!-- Watched By -->
     <section class="add-movie__section">
       <h2 class="add-movie__section-title">Watched By</h2>
       <div class="add-movie__watched">
@@ -91,10 +95,10 @@
       </div>
     </section>
 
-    <!-- Submit -->
     <div class="add-movie__actions">
       <span class="add-movie__error" *ngIf="saveError">{{ saveError }}</span>
-      <button type="button" class="btn btn--secondary" (click)="cancel()">Cancel</button>      <button type="submit" class="btn btn--primary" [disabled]="form.invalid || isSaving">
+      <button type="button" class="btn btn--secondary" (click)="cancel()">Cancel</button>
+      <button type="submit" class="btn btn--primary" [disabled]="form.invalid || isSaving">
         {{ isSaving ? 'Saving...' : 'Save Movie' }}
       </button>
     </div>
