@@ -209,3 +209,51 @@ $color-success: #27ae60;
     }
   }
 }
+.movies__fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 64px;
+  height: 64px;
+  background: $color-accent;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+  transition: background 0.2s, transform 0.15s, width 0.2s, border-radius 0.2s;
+  overflow: hidden;
+  white-space: nowrap;
+
+  &-icon {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+  }
+
+  &::after {
+    content: 'Add movie';
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: 'Segoe UI', sans-serif;
+    max-width: 0;
+    overflow: hidden;
+    transition: max-width 0.2s ease, margin 0.2s ease;
+    margin-left: 0;
+  }
+
+  &:hover {
+    background: #f40612;
+    transform: scale(1.04);
+    width: auto;
+    border-radius: 32px;
+    padding: 0 1.25rem;
+
+    &::after {
+      max-width: 100px;
+      margin-left: 0.5rem;
+    }
+  }
+}

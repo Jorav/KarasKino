@@ -3,11 +3,12 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MovieService, TmdbMovieResult, SavedMovieResult } from '../../services/movie.service';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-add-movie',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './add-movie.component.html',
   styleUrls: ['./add-movie.component.scss']
 })
@@ -160,5 +161,8 @@ export class AddMovieComponent {
         this.saveError = 'Failed to save movie. Please try again.';
       }
     });
+  }
+  cancel(): void {
+    this.router.navigate(['/movies']);
   }
 }

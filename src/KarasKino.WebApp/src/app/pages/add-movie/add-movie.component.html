@@ -94,7 +94,7 @@
     <!-- Submit -->
     <div class="add-movie__actions">
       <span class="add-movie__error" *ngIf="saveError">{{ saveError }}</span>
-      <button type="submit" class="btn btn--primary" [disabled]="form.invalid || isSaving">
+      <button type="button" class="btn btn--secondary" (click)="cancel()">Cancel</button>      <button type="submit" class="btn btn--primary" [disabled]="form.invalid || isSaving">
         {{ isSaving ? 'Saving...' : 'Save Movie' }}
       </button>
     </div>
