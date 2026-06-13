@@ -40,6 +40,26 @@ export interface SavedMovieResult {
   watchedByKara: boolean;
   watchedByJohan: boolean;
 }
+export interface MovieListItem {
+  id: string;
+  title: string;
+  imdbId: string;
+  description: string | null;
+  posterUrl: string | null;
+  director: string | null;
+  releaseYear: string | null;
+  runtime: number | null;
+  genres: string[];
+  watchedByKara: boolean;
+  watchedByJohan: boolean;
+}
+
+export interface PagedMoviesResult {
+  items: MovieListItem[];
+  totalCount: number;
+  page: number;
+  pageSize: number;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -59,5 +79,10 @@ export class MovieService {
   }
   getByImdbId(imdbId: string): Observable<SavedMovieResult> {
     return this.http.get<SavedMovieResult>(`${this.apiUrl}/movies/${imdbId}`);
+  }
+  getMovies(page: number, pageSize: number, search?: string): Observable<PagedMoviesResult> {
+    let params: any = { page, pageSize };
+    if (search) params['search'] = search;
+    return this.http.get<PagedMoviesResult>(`${this.apiUrl}/movies`, { params });
   }
 }

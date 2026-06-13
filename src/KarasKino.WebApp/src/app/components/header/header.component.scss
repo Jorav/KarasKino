@@ -1,0 +1,19 @@
+.app-header {
+  padding: 2rem 2rem 1.5rem;
+  text-align: center;
+  border-bottom: 1px solid #222;
+  margin-bottom: 2rem;
+
+  &__logo {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #e50914;
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    font-family: 'Segoe UI', sans-serif;
+
+    &:hover {
+      color: #f40612;
+    }
+  }
+}

@@ -1,0 +1,65 @@
+<div class="movies">
+  <div class="movies__header">
+    <h1 class="movies__title">Movies</h1>
+    <span class="movies__count" *ngIf="totalCount > 0">{{ totalCount }} movies</span>
+  </div>
+
+  <div class="movies__search">
+    <input type="text"
+           [(ngModel)]="search"
+           (ngModelChange)="onSearchChange()"
+           placeholder="Search by title..."
+           class="movies__search-input" />
+  </div>
+
+  <div class="movies__list">
+    <div class="movie-card" *ngFor="let movie of movies">
+      <div class="movie-card__poster">
+        <img *ngIf="movie.posterUrl" [src]="movie.posterUrl" [alt]="movie.title" />
+        <div *ngIf="!movie.posterUrl" class="movie-card__no-poster">No poster</div>
+      </div>
+
+      <div class="movie-card__content">
+        <div class="movie-card__top">
+          <h2 class="movie-card__title">{{ movie.title }}</h2>
+          <div class="movie-card__meta">
+            <span *ngIf="movie.releaseYear">{{ movie.releaseYear }}</span>
+            <span *ngIf="movie.runtime" class="movie-card__dot">·</span>
+            <span *ngIf="movie.runtime">{{ formatRuntime(movie.runtime) }}</span>
+            <span *ngIf="movie.director" class="movie-card__dot">·</span>
+            <span *ngIf="movie.director">{{ movie.director }}</span>
+          </div>
+          <div class="movie-card__genres" *ngIf="movie.genres.length > 0">
+            <span class="movie-card__genre" *ngFor="let genre of movie.genres">{{ genre }}</span>
+          </div>
+        </div>
+
+        <p class="movie-card__description" *ngIf="movie.description">{{ movie.description }}</p>
+
+        <div class="movie-card__bottom">
+          <div class="movie-card__watched">
+            <span class="movie-card__watched-badge"
+                  [class.movie-card__watched-badge--seen]="movie.watchedByKara">
+              Kara
+            </span>
+            <span class="movie-card__watched-badge"
+                  [class.movie-card__watched-badge--seen]="movie.watchedByJohan">
+              Johan
+            </span>
+          </div>
+          <a [href]="'https://www.imdb.com/title/' + movie.imdbId"
+             target="_blank"
+             class="movie-card__imdb">IMDB ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="movies__loading" *ngIf="isLoading">
+    <span>Loading...</span>
+  </div>
+
+  <div class="movies__empty" *ngIf="!isLoading && movies.length === 0">
+    <span>No movies found.</span>
+  </div>
+</div>
