@@ -13,7 +13,10 @@
   </div>
 
   <div class="movies__list">
-    <div class="movie-card" *ngFor="let movie of movies">
+    <div class="movie-card"
+         *ngFor="let movie of movies"
+         [routerLink]="['/add-movie']"
+         [queryParams]="{ imdbId: movie.imdbId }">
       <div class="movie-card__poster">
         <img *ngIf="movie.posterUrl" [src]="movie.posterUrl" [alt]="movie.title" />
         <div *ngIf="!movie.posterUrl" class="movie-card__no-poster">No poster</div>
@@ -49,6 +52,7 @@
           </div>
           <a [href]="'https://www.imdb.com/title/' + movie.imdbId"
              target="_blank"
+             (click)="$event.stopPropagation()"
              class="movie-card__imdb">IMDB ↗</a>
         </div>
       </div>
@@ -63,6 +67,7 @@
     <span>No movies found.</span>
   </div>
 </div>
+
 <a routerLink="/add-movie" class="movies__fab" title="Add movie">
   <svg class="movies__fab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
     <line x1="12" y1="5" x2="12" y2="19"></line>
