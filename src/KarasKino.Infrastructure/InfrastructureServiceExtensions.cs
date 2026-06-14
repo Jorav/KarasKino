@@ -13,6 +13,10 @@ public static class InfrastructureServiceExtensions
   {
     string? connectionString = config.GetConnectionString("karaskinodb")
                                ?? config.GetConnectionString("DefaultConnection");
+    if (!string.IsNullOrEmpty(connectionString) && connectionString.StartsWith("postgresql://"))
+    {
+      connectionString = ConvertPostgresUrlToConnectionString(connectionString);
+    }
     Guard.Against.Null(connectionString);
 
     services.AddScoped<EventDispatchInterceptor>();
@@ -32,5 +36,12 @@ public static class InfrastructureServiceExtensions
     logger.LogInformation("{Project} services registered", "Infrastructure");
 
     return services;
+  }
+
+  private static string ConvertPostgresUrlToConnectionString(string url)
+  {
+    var uri = new Uri(url);
+    var userInfo = uri.UserInfo.Split(':');
+    return $"Host={uri.Host};Port={uri.Port};Database={uri.AbsolutePath.TrimStart('/')};Username={userInfo[0]};Password={userInfo[1]};SSL Mode=Require;Trust Server Certificate=true";
   }
 }

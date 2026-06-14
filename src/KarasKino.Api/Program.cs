@@ -11,10 +11,30 @@ if (!string.IsNullOrEmpty(secretsPath))
   builder.Configuration.AddJsonFile(secretsPath, optional: true, reloadOnChange: false);
 }
 
+// Railway injects DATABASE_URL - map it to our connection string
+var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+if (!string.IsNullOrEmpty(databaseUrl))
+{
+  builder.Configuration["ConnectionStrings:karaskinodb"] = databaseUrl;
+}
+
 using var loggerFactory = LoggerFactory.Create(config => config.AddConsole());
 var startupLogger = loggerFactory.CreateLogger<Program>();
 
 startupLogger.LogInformation("Starting web host");
+
+builder.Services.AddHealthChecks();
+
+builder.Services.AddCors(options =>
+{
+  options.AddDefaultPolicy(policy =>
+  {
+    var allowedOrigins = builder.Configuration["AllowedOrigins"] ?? "*";
+    policy.WithOrigins(allowedOrigins.Split(','))
+          .AllowAnyHeader()
+          .AllowAnyMethod();
+  });
+});
 
 builder.Services.AddOptionConfigs(builder.Configuration, startupLogger, builder);
 builder.Services.AddServiceConfigs(startupLogger, builder);
@@ -33,9 +53,12 @@ builder.Services.AddFastEndpoints()
 
 var app = builder.Build();
 
+app.UseCors();
+
 await app.UseAppMiddlewareAndSeedDatabase();
 
 app.MapDefaultEndpoints();
+app.MapHealthChecks("/health");
 
 app.Run();
 
