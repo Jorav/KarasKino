@@ -19,7 +19,10 @@ public static class MiddlewareConfig
       app.UseHsts();
     }
 
-    app.UseFastEndpoints();
+    app.UseFastEndpoints(c =>
+    {
+      c.Endpoints.RoutePrefix = "api";
+    });
 
     if (app.Environment.IsDevelopment())
     {
