@@ -45,7 +45,6 @@ public static class MiddlewareConfig
 
     app.UseHttpsRedirection(); // Note this will drop Authorization headers
 
-    // Run migrations and seed in Development or when explicitly requested via environment variable
     var shouldMigrate = app.Environment.IsDevelopment() || 
                         app.Configuration.GetValue<bool>("Database:ApplyMigrationsOnStartup");
     
