@@ -6,7 +6,6 @@
     <section class="add-movie__section">
       <h2 class="add-movie__section-title">IMDB Lookup</h2>
       <div class="add-movie__field">
-        <label for="imdbLink">IMDB Link</label>
         <div class="add-movie__imdb-row">
           <input id="imdbLink"
                  formControlName="imdbLink"
@@ -18,12 +17,6 @@
                   [disabled]="isLoadingTmdb || isLoadingDb">
             {{ isLoadingTmdb ? 'Looking up...' : 'Lookup' }}
           </button>
-          <button type="button"
-                  class="btn btn--secondary"
-                  (click)="getFromDb()"
-                  [disabled]="isLoadingTmdb || isLoadingDb">
-            {{ isLoadingDb ? 'Loading...' : 'Get' }}
-          </button>
         </div>
         <span class="add-movie__error" *ngIf="tmdbError">{{ tmdbError }}</span>
         <span class="add-movie__db-result" *ngIf="dbResult">{{ dbResult }}</span>
@@ -34,7 +27,6 @@
       <h2 class="add-movie__section-title">Movie Details</h2>
 
       <div class="add-movie__details-grid">
-
         <div class="add-movie__fields">
           <div class="add-movie__field">
             <label for="title">Title</label>
@@ -77,7 +69,6 @@
             <span>No Poster</span>
           </div>
         </div>
-
       </div>
     </section>
 

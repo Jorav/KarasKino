@@ -8,8 +8,7 @@ const PROXY_CONFIG = [
   {
     context: ['/api'],
     target,
-    secure: false,
-    pathRewrite: { '^/api': '' }
+    secure: false
   }
 ];
 

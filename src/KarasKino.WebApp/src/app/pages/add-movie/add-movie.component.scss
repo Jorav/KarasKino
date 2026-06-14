@@ -49,6 +49,7 @@ $color-success: #27ae60;
     border-radius: 8px;
     padding: 1rem 1.25rem;
     margin-bottom: 0.85rem;
+    box-sizing: border-box;
   }
 
   &__section-title {
@@ -80,6 +81,8 @@ $color-success: #27ae60;
       font-size: 0.95rem;
       outline: none;
       transition: border-color 0.2s;
+      box-sizing: border-box;
+      width: 100%;
 
       &:focus {
         border-color: $color-accent;
