@@ -93,7 +93,6 @@ public static class MiddlewareConfig
     catch (Exception ex)
     {
       logger.LogError(ex, "An error occurred seeding the DB. {exceptionMessage}", ex.Message);
-      // Don't re-throw for seeding errors - it's not critical
     }
   }
 }
