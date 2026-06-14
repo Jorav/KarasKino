@@ -4,6 +4,10 @@ EXPOSE 8080
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
+
+COPY ["Directory.Build.props", "."]
+COPY ["Directory.Packages.props", "."]
+
 COPY ["src/KarasKino.Api/KarasKino.Api.csproj", "src/KarasKino.Api/"]
 COPY ["src/KarasKino.Core/KarasKino.Core.csproj", "src/KarasKino.Core/"]
 COPY ["src/KarasKino.Application/KarasKino.Application.csproj", "src/KarasKino.Application/"]
