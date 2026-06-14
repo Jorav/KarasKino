@@ -9,26 +9,6 @@ $color-accent-hover: #f40612;
 $color-danger: #c0392b;
 $color-success: #27ae60;
 
-.app-header {
-  padding: 1.25rem 1.5rem 0.75rem;
-  text-align: center;
-  border-bottom: 1px solid #222;
-  margin-bottom: 1.25rem;
-
-  &__logo {
-    font-size: 2.25rem;
-    font-weight: 800;
-    color: #e50914;
-    text-decoration: none;
-    letter-spacing: 0.06em;
-    font-family: 'Segoe UI', sans-serif;
-
-    &:hover {
-      color: #f40612;
-    }
-  }
-}
-
 .add-movie {
   max-width: 800px;
   margin: 0 auto;
@@ -360,8 +340,8 @@ $color-success: #27ae60;
     white-space: nowrap;
 
     &-icon {
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       flex-shrink: 0;
     }
 
