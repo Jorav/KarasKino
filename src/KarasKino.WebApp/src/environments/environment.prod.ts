@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://kara.ravnborg.se/karaskino/api'
+  apiBaseUrl: 'https://karaskino-production.up.railway.app/api'
 };
