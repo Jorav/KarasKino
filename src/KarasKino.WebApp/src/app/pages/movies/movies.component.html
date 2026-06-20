@@ -15,8 +15,7 @@
   <div class="movies__list">
     <div class="movie-card"
          *ngFor="let movie of movies"
-         [routerLink]="['/add-movie']"
-         [queryParams]="{ imdbId: movie.imdbId }">
+         (click)="toggleCardActions(movie.imdbId, $event)">
       <div class="movie-card__poster">
         <img *ngIf="movie.posterUrl" [src]="movie.posterUrl" [alt]="movie.title" />
         <div *ngIf="!movie.posterUrl" class="movie-card__no-poster">No poster</div>
@@ -55,6 +54,32 @@
              (click)="$event.stopPropagation()"
              class="movie-card__imdb">IMDB ↗</a>
         </div>
+      </div>
+
+      <div class="movie-card__actions" *ngIf="activeCardImdbId === movie.imdbId">
+        <ng-container *ngIf="confirmingDeleteImdbId !== movie.imdbId">
+          <button class="movie-card__action-btn movie-card__action-btn--edit"
+                  (click)="editMovie(movie.imdbId, $event)">
+            Edit
+          </button>
+          <button class="movie-card__action-btn movie-card__action-btn--delete"
+                  (click)="requestDelete(movie.imdbId, $event)">
+            Delete
+          </button>
+        </ng-container>
+
+        <ng-container *ngIf="confirmingDeleteImdbId === movie.imdbId">
+          <span class="movie-card__confirm-text">Delete this movie?</span>
+          <button class="movie-card__action-btn movie-card__action-btn--cancel"
+                  (click)="cancelDelete($event)">
+            Cancel
+          </button>
+          <button class="movie-card__action-btn movie-card__action-btn--confirm"
+                  [disabled]="isDeleting"
+                  (click)="confirmDelete(movie.imdbId, $event)">
+            {{ isDeleting ? 'Deleting...' : 'Confirm' }}
+          </button>
+        </ng-container>
       </div>
     </div>
   </div>

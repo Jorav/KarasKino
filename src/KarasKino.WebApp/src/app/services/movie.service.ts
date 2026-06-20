@@ -102,4 +102,7 @@ export class MovieService {
     if (search) params['search'] = search;
     return this.http.get<PagedMoviesResult>(`${this.apiUrl}/movies`, { params });
   }
+  deleteMovie(imdbId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/movies/${imdbId}`);
+  }
 }
