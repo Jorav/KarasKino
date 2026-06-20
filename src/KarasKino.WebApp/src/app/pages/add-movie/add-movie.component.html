@@ -4,19 +4,32 @@
   <form [formGroup]="form" (ngSubmit)="submit()">
 
     <section class="add-movie__section">
-      <h2 class="add-movie__section-title">IMDB Lookup</h2>
+      <h2 class="add-movie__section-title">Find Movie</h2>
       <div class="add-movie__field">
-        <div class="add-movie__imdb-row">
-          <input id="imdbLink"
-                 formControlName="imdbLink"
-                 type="text"
-                 placeholder="https://www.imdb.com/title/tt0111161/" />
-          <button type="button"
-                  class="btn btn--secondary"
-                  (click)="lookupMovie()"
-                  [disabled]="isLoadingTmdb || isLoadingDb">
-            {{ isLoadingTmdb ? 'Looking up...' : 'Lookup' }}
-          </button>
+        <div class="add-movie__search-wrapper">
+          <input
+            type="text"
+            [value]="searchQuery"
+            (input)="onSearchInput($any($event.target).value)"
+            (focus)="showDropdown = searchResults.length > 0"
+            placeholder="Search by title..." />
+
+          <div class="add-movie__dropdown" *ngIf="showDropdown">
+            <div class="add-movie__dropdown-item"
+                 *ngFor="let result of searchResults"
+                 (click)="selectSearchResult(result)">
+              <img *ngIf="result.posterUrl" [src]="result.posterUrl" [alt]="result.title" />
+              <div *ngIf="!result.posterUrl" class="add-movie__dropdown-no-poster"></div>
+              <div class="add-movie__dropdown-info">
+                <span class="add-movie__dropdown-title">{{ result.title }}</span>
+                <span class="add-movie__dropdown-meta">
+                  <span *ngIf="result.releaseYear">{{ result.releaseYear }}</span>
+                  <span *ngIf="result.releaseYear && result.director"> · </span>
+                  <span *ngIf="result.director">{{ result.director }}</span>
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
         <span class="add-movie__error" *ngIf="tmdbError">{{ tmdbError }}</span>
         <span class="add-movie__db-result" *ngIf="dbResult">{{ dbResult }}</span>
@@ -31,6 +44,11 @@
           <div class="add-movie__field">
             <label for="title">Title</label>
             <input id="title" formControlName="title" type="text" />
+          </div>
+
+          <div class="add-movie__field">
+            <label for="imdbLink">IMDB Link</label>
+            <input id="imdbLink" formControlName="imdbLink" type="text" />
           </div>
 
           <div class="add-movie__field">

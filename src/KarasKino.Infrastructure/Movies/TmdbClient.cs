@@ -47,4 +47,17 @@ public class TmdbClient(IHttpClientFactory httpClientFactory, IOptions<TmdbConfi
     var json = await response.Content.ReadAsStringAsync(ct);
     return JsonSerializer.Deserialize<TmdbMovieDetailsResponse>(json, JsonOptions);
   }
+
+  public async Task<TmdbSearchResponse?> SearchMovies(string query, CancellationToken ct = default)
+  {
+    SetAuthHeader();
+    var response = await _httpClient.GetAsync(
+      $"{_config.BaseUrl}/search/movie?query={Uri.EscapeDataString(query)}&include_adult=false", ct);
+
+    if (!response.IsSuccessStatusCode)
+      return null;
+
+    var json = await response.Content.ReadAsStringAsync(ct);
+    return JsonSerializer.Deserialize<TmdbSearchResponse>(json, JsonOptions);
+  }
 }
