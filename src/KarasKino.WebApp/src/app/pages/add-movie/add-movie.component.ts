@@ -40,7 +40,7 @@ export class AddMovieComponent implements OnInit {
     this.searchSubject.pipe(
       debounceTime(400),
       distinctUntilChanged(),
-      filter(q => q.trim().length > 2),
+      filter(q => q.trim().length > 0),
       tap(() => this.isSearching = true),
       switchMap(q => this.movieService.searchTmdb(q))
     )
