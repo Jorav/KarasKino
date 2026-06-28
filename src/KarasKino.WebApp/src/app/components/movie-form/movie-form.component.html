@@ -1,0 +1,74 @@
+<form [formGroup]="form" (ngSubmit)="submit()">
+
+  <section class="movie-form__section">
+    <h2 class="movie-form__section-title">Movie Details</h2>
+
+    <div class="movie-form__details-grid">
+      <div class="movie-form__fields">
+        <div class="movie-form__field">
+          <label for="title">Title</label>
+          <input id="title" formControlName="title" type="text" />
+        </div>
+
+        <div class="movie-form__field">
+          <label for="director">Director</label>
+          <input id="director" formControlName="director" type="text" />
+        </div>
+
+        <div class="movie-form__row">
+          <div class="movie-form__field">
+            <label for="releaseDate">Year</label>
+            <input id="releaseDate" formControlName="releaseDate" type="text" />
+          </div>
+
+          <div class="movie-form__field">
+            <label for="runtime">Runtime (min)</label>
+            <input id="runtime" formControlName="runtime" type="number" />
+          </div>
+        </div>
+
+        <div class="movie-form__field">
+          <label for="description">Description</label>
+          <textarea id="description" formControlName="description" rows="4"></textarea>
+        </div>
+
+        <div class="movie-form__field" *ngIf="genres.length > 0">
+          <label>Genres</label>
+          <div class="movie-form__genres">
+            <span class="movie-form__genre" *ngFor="let genre of genres">{{ genre }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="movie-form__poster-preview">
+        <img *ngIf="posterPreview" [src]="posterPreview" [alt]="form.get('title')?.value" />
+        <div *ngIf="!posterPreview" class="movie-form__poster-placeholder">
+          <span>No Poster</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="movie-form__section">
+    <h2 class="movie-form__section-title">Watched By</h2>
+    <div class="movie-form__watched">
+      <label class="movie-form__checkbox">
+        <input type="checkbox" formControlName="watchedByKara" />
+        <span>Kara</span>
+      </label>
+      <label class="movie-form__checkbox">
+        <input type="checkbox" formControlName="watchedByJohan" />
+        <span>Johan</span>
+      </label>
+    </div>
+  </section>
+
+  <div class="movie-form__actions">
+    <span class="movie-form__error" *ngIf="saveError">{{ saveError }}</span>
+    <button type="button" class="btn btn--secondary" (click)="onCancel()">Cancel</button>
+    <button type="submit" class="btn btn--primary" [disabled]="form.invalid || isSaving">
+      {{ isSaving ? 'Saving...' : saveButtonLabel }}
+    </button>
+  </div>
+
+</form>

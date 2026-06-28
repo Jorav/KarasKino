@@ -1,0 +1,200 @@
+$color-bg: #141414;
+$color-surface: #1f1f1f;
+$color-surface-raised: #2a2a2a;
+$color-border: #333;
+$color-text: #f0f0f0;
+$color-text-muted: #888;
+$color-accent: #e50914;
+$color-accent-hover: #f40612;
+$color-danger: #c0392b;
+$color-success: #27ae60;
+
+.movie-form {
+  &__section {
+    background: $color-surface;
+    border: 1px solid $color-border;
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.85rem;
+    box-sizing: border-box;
+  }
+
+  &__section-title {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: $color-text-muted;
+    margin-bottom: 0.75rem;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 0.75rem;
+
+    label {
+      font-size: 0.85rem;
+      color: $color-text-muted;
+    }
+
+    input, textarea {
+      background: $color-surface-raised;
+      border: 1px solid $color-border;
+      border-radius: 4px;
+      color: $color-text;
+      padding: 0.45rem 0.75rem;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+      box-sizing: border-box;
+      width: 100%;
+
+      &:focus {
+        border-color: $color-accent;
+      }
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &__row {
+    display: flex;
+    gap: 1rem;
+
+    .movie-form__field {
+      flex: 1;
+    }
+  }
+
+  &__error {
+    font-size: 0.8rem;
+    color: $color-accent;
+  }
+
+  &__details-grid {
+    display: grid;
+    grid-template-columns: 1fr 120px;
+    gap: 1.5rem;
+
+    @media (max-width: 600px) {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+
+      .movie-form__poster-preview {
+        grid-row: 1;
+        justify-content: center;
+      }
+    }
+  }
+
+  &__fields {
+    flex: 1;
+  }
+
+  &__poster-preview {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+
+    img {
+      width: 120px;
+      height: 180px;
+      border-radius: 6px;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  &__poster-placeholder {
+    width: 120px;
+    height: 180px;
+    background: $color-surface-raised;
+    border: 1px dashed $color-border;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $color-text-muted;
+    font-size: 0.75rem;
+  }
+
+  &__watched {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  &__checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 0.95rem;
+
+    input[type="checkbox"] {
+      accent-color: $color-accent;
+      width: 16px;
+      height: 16px;
+      cursor: pointer;
+    }
+  }
+
+  &__genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.25rem;
+  }
+
+  &__genre {
+    background: #2e2e2e;
+    border: 1px solid #444;
+    border-radius: 4px;
+    padding: 0.15rem 0.5rem;
+    font-size: 0.75rem;
+    color: $color-text-muted;
+    letter-spacing: 0.03em;
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+}
+
+.btn {
+  padding: 0.45rem 1.15rem;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &--primary {
+    background: $color-accent;
+    color: white;
+
+    &:hover:not(:disabled) { background: $color-accent-hover; }
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+  }
+
+  &--secondary {
+    background: $color-surface-raised;
+    color: $color-text;
+    border: 1px solid $color-border;
+
+    &:hover:not(:disabled) { border-color: $color-accent; color: $color-accent; }
+    &:disabled { opacity: 0.5; cursor: not-allowed; }
+  }
+}

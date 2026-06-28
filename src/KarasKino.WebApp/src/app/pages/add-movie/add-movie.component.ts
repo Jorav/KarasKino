@@ -1,27 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, ActivatedRoute, RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
-import { MovieService, TmdbMovieResult, SavedMovieResult, MovieSearchResult } from '../../services/movie.service';
-import { HostListener, ElementRef } from '@angular/core';
+import { MovieService, TmdbMovieResult, MovieSearchResult } from '../../services/movie.service';
+import { MovieFormComponent, MovieFormValue } from '../../components/movie-form/movie-form.component';
 
 @Component({
   selector: 'app-add-movie',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, RouterModule, MovieFormComponent],
   templateUrl: './add-movie.component.html',
   styleUrls: ['./add-movie.component.scss']
 })
 export class AddMovieComponent implements OnInit {
-  form: FormGroup;
   isLoadingTmdb = false;
-  isLoadingDb = false;
   isSaving = false;
   saveError: string | null = null;
   tmdbError: string | null = null;
-  dbResult: string | null = null;
   posterPreview: string | null = null;
 
   searchQuery = '';
@@ -29,37 +25,18 @@ export class AddMovieComponent implements OnInit {
   isSearching = false;
   showDropdown = false;
 
+  selectedImdbId: string | null = null;
+  formInitialValue: Partial<MovieFormValue> | null = null;
+
   private searchSubject = new Subject<string>();
 
   constructor(
-    private fb: FormBuilder,
     private movieService: MovieService,
     private router: Router,
-    private route: ActivatedRoute,
     private elementRef: ElementRef
-  ) {
-    this.form = this.fb.group({
-      imdbLink: ['', Validators.required],
-      title: ['', Validators.required],
-      description: [''],
-      posterUrl: [''],
-      director: [''],
-      releaseDate: [null],
-      runtime: [null],
-      genres: [[]],
-      watchedByKara: [false],
-      watchedByJohan: [false]
-    });
-  }
+  ) { }
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      const imdbId = params['imdbId'];
-      if (imdbId) {
-        this.loadMovieFromDb(imdbId, false);
-      }
-    });
-
     this.searchSubject.pipe(
       debounceTime(300),
       distinctUntilChanged(),
@@ -82,10 +59,26 @@ export class AddMovieComponent implements OnInit {
     });
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.showDropdown = false;
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    this.showDropdown = false;
+  }
+
+  extractImdbId(link: string): string | null {
+    const match = link.match(/tt\d+/);
+    return match ? match[0] : null;
+  }
+
   onSearchInput(value: string): void {
     this.searchQuery = value;
     this.tmdbError = null;
-    this.dbResult = null;
 
     const imdbId = this.extractImdbId(value);
     if (imdbId) {
@@ -110,21 +103,15 @@ export class AddMovieComponent implements OnInit {
     this.lookupByImdbId(result.imdbId);
   }
 
-  extractImdbId(link: string): string | null {
-    const match = link.match(/tt\d+/);
-    return match ? match[0] : null;
-  }
-
   lookupByImdbId(imdbId: string): void {
     this.posterPreview = null;
     this.tmdbError = null;
-    this.dbResult = null;
     this.isLoadingTmdb = true;
 
     this.movieService.findByImdbId(imdbId).subscribe({
       next: (movie: TmdbMovieResult) => {
-        this.form.patchValue({
-          imdbLink: `https://www.imdb.com/title/${imdbId}/`,
+        this.selectedImdbId = imdbId;
+        this.formInitialValue = {
           title: movie.title,
           description: movie.description,
           posterUrl: movie.posterUrl,
@@ -132,7 +119,7 @@ export class AddMovieComponent implements OnInit {
           releaseDate: movie.releaseDate,
           runtime: movie.runtime,
           genres: movie.genres
-        });
+        };
         this.posterPreview = movie.posterUrl;
         this.isLoadingTmdb = false;
       },
@@ -149,86 +136,26 @@ export class AddMovieComponent implements OnInit {
     });
   }
 
-  getFromDb(): void {
-    this.dbResult = null;
-    this.tmdbError = null;
-
-    const link = this.form.get('imdbLink')?.value ?? '';
-    const imdbId = this.extractImdbId(link);
-
-    if (!imdbId) {
-      this.dbResult = 'Could not extract a valid IMDB ID from that link.';
+  onSave(value: MovieFormValue): void {
+    if (!this.selectedImdbId) {
+      this.saveError = 'Please find a movie first.';
       return;
     }
-
-    this.loadMovieFromDb(imdbId, true);
-  }
-
-  loadMovieFromDb(imdbId: string, isManual: boolean): void {
-    this.isLoadingDb = true;
-    this.dbResult = null;
-    this.tmdbError = null;
-
-    this.movieService.getByImdbId(imdbId).subscribe({
-      next: (movie: SavedMovieResult) => {
-        this.form.patchValue({
-          imdbLink: `https://www.imdb.com/title/${movie.imdbId}/`,
-          title: movie.title,
-          description: movie.description,
-          posterUrl: movie.posterUrl,
-          director: movie.director,
-          releaseDate: movie.releaseYear,
-          runtime: movie.runtime,
-          genres: movie.genres,
-          watchedByKara: movie.watchedByKara,
-          watchedByJohan: movie.watchedByJohan
-        });
-        this.posterPreview = movie.posterUrl;
-        this.searchQuery = movie.title;
-        this.isLoadingDb = false;
-        if (isManual) {
-          this.dbResult = 'Loaded from database.';
-        }
-      },
-      error: (err) => {
-        this.isLoadingDb = false;
-        if (isManual) {
-          if (err.status === 404) {
-            this.dbResult = 'No saved entry found in database.';
-          } else {
-            this.dbResult = 'Something went wrong fetching from database.';
-          }
-        } else {
-          this.dbResult = 'Failed to load movie details.';
-        }
-      }
-    });
-  }
-
-  get genres(): string[] {
-    return this.form.get('genres')?.value ?? [];
-  }
-
-  submit(): void {
-    if (this.form.invalid || this.isSaving) return;
-
-    const link = this.form.get('imdbLink')?.value ?? '';
-    const imdbId = this.extractImdbId(link) ?? '';
 
     this.isSaving = true;
     this.saveError = null;
 
     this.movieService.addMovie({
-      imdbId,
-      title: this.form.get('title')?.value,
-      description: this.form.get('description')?.value || null,
-      posterUrl: this.form.get('posterUrl')?.value || null,
-      director: this.form.get('director')?.value || null,
-      releaseYear: this.form.get('releaseDate')?.value || null,
-      runtime: this.form.get('runtime')?.value || null,
-      genres: this.form.get('genres')?.value ?? [],
-      watchedByKara: this.form.get('watchedByKara')?.value ?? false,
-      watchedByJohan: this.form.get('watchedByJohan')?.value ?? false
+      imdbId: this.selectedImdbId,
+      title: value.title,
+      description: value.description,
+      posterUrl: value.posterUrl,
+      director: value.director,
+      releaseYear: value.releaseDate,
+      runtime: value.runtime,
+      genres: value.genres,
+      watchedByKara: value.watchedByKara,
+      watchedByJohan: value.watchedByJohan
     }).subscribe({
       next: () => this.router.navigate(['/movies']),
       error: () => {
@@ -238,19 +165,7 @@ export class AddMovieComponent implements OnInit {
     });
   }
 
-  cancel(): void {
+  onCancel(): void {
     this.router.navigate(['/movies']);
-  }
-
-  @HostListener('document:click', ['$event'])
-  onDocumentClick(event: MouseEvent): void {
-    if (!this.elementRef.nativeElement.contains(event.target)) {
-      this.showDropdown = false;
-    }
-  }
-
-  @HostListener('document:keydown.escape')
-  onEscapeKey(): void {
-    this.showDropdown = false;
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { MovieService, MovieListItem } from '../../services/movie.service';
@@ -25,10 +25,17 @@ export class MoviesComponent implements OnInit, OnDestroy {
   isLoading = false;
   hasMore = true;
 
+  activeCardImdbId: string | null = null;
+  confirmingDeleteImdbId: string | null = null;
+  isDeleting = false;
+
   private searchSubject = new Subject<string>();
   private destroy$ = new Subject<void>();
 
-  constructor(private movieService: MovieService) { }
+  constructor(
+    private movieService: MovieService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
     this.searchSubject.pipe(
@@ -89,5 +96,49 @@ export class MoviesComponent implements OnInit, OnDestroy {
     const h = Math.floor(minutes / 60);
     const m = minutes % 60;
     return h > 0 ? `${h}h ${m}m` : `${m}m`;
+  }
+
+  toggleCardActions(imdbId: string, event: Event): void {
+    event.stopPropagation();
+    this.activeCardImdbId = this.activeCardImdbId === imdbId ? null : imdbId;
+    this.confirmingDeleteImdbId = null;
+  }
+
+  editMovie(imdbId: string, event: Event): void {
+    event.stopPropagation();
+    this.router.navigate(['/add-movie'], { queryParams: { imdbId } });
+  }
+
+  requestDelete(imdbId: string, event: Event): void {
+    event.stopPropagation();
+    this.confirmingDeleteImdbId = imdbId;
+  }
+
+  cancelDelete(event: Event): void {
+    event.stopPropagation();
+    this.confirmingDeleteImdbId = null;
+  }
+
+  confirmDelete(imdbId: string, event: Event): void {
+    event.stopPropagation();
+    this.isDeleting = true;
+    this.movieService.deleteMovie(imdbId).subscribe({
+      next: () => {
+        this.movies = this.movies.filter(m => m.imdbId !== imdbId);
+        this.totalCount--;
+        this.activeCardImdbId = null;
+        this.confirmingDeleteImdbId = null;
+        this.isDeleting = false;
+      },
+      error: () => {
+        this.isDeleting = false;
+      }
+    });
+  }
+
+  @HostListener('document:click')
+  onDocumentClick(): void {
+    this.activeCardImdbId = null;
+    this.confirmingDeleteImdbId = null;
   }
 }
