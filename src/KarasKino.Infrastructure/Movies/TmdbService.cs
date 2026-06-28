@@ -6,7 +6,7 @@ public class TmdbService(TmdbClient tmdbClient, IOptions<TmdbConfiguration> conf
 {
   private readonly TmdbConfiguration _config = config.Value;
 
-  public async Task<MovieLookupResult?> FindByImdbId(string imdbId, CancellationToken ct = default)
+  public async Task<MovieLookupResult?> FindByImdbId(string imdbId, CancellationToken ct)
   {
     var findResponse = await tmdbClient.FindByImdbId(imdbId, ct);
     if (findResponse == null || findResponse.MovieResults.Count == 0)
@@ -38,5 +38,41 @@ public class TmdbService(TmdbClient tmdbClient, IOptions<TmdbConfiguration> conf
       details.Runtime,
       imdbId,
       genres);
+  }
+
+  public async Task<List<MovieSearchResult>> SearchMovies(string query, CancellationToken ct)
+  {
+    var searchResponse = await tmdbClient.SearchMovies(query, ct);
+    if (searchResponse == null || searchResponse.Results.Count == 0)
+      return [];
+
+    var topResults = searchResponse.Results
+      .OrderByDescending(r => r.Popularity)
+      .Take(5)
+      .ToList();
+
+    var detailTasks = topResults.Select(async r =>
+    {
+      var details = await tmdbClient.GetMovieDetails(r.Id, ct);
+      if (details == null)
+        return null;
+
+      var director = details.Credits.Crew
+        .FirstOrDefault(c => c.Job == "Director")?.Name;
+
+      var posterUrl = r.PosterPath != null
+        ? $"{_config.ImageBaseUrl}{r.PosterPath}"
+        : null;
+
+      return new MovieSearchResult(
+        details.ImdbId ?? string.Empty,
+        r.Title,
+        director,
+        r.ReleaseDate?.Length >= 4 ? r.ReleaseDate[..4] : null,
+        posterUrl);
+    });
+
+    var results = await Task.WhenAll(detailTasks);
+    return results.Where(r => r is not null && !string.IsNullOrEmpty(r.ImdbId)).ToList()!;
   }
 }

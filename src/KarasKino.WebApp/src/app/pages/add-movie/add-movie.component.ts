@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
-import { MovieService, TmdbMovieResult, SavedMovieResult } from '../../services/movie.service';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
+import { MovieService, TmdbMovieResult, SavedMovieResult, MovieSearchResult } from '../../services/movie.service';
+import { HostListener, ElementRef } from '@angular/core';
 
 @Component({
   selector: 'app-add-movie',
@@ -21,11 +24,19 @@ export class AddMovieComponent implements OnInit {
   dbResult: string | null = null;
   posterPreview: string | null = null;
 
+  searchQuery = '';
+  searchResults: MovieSearchResult[] = [];
+  isSearching = false;
+  showDropdown = false;
+
+  private searchSubject = new Subject<string>();
+
   constructor(
     private fb: FormBuilder,
     private movieService: MovieService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private elementRef: ElementRef
   ) {
     this.form = this.fb.group({
       imdbLink: ['', Validators.required],
@@ -48,11 +59,94 @@ export class AddMovieComponent implements OnInit {
         this.loadMovieFromDb(imdbId, false);
       }
     });
+
+    this.searchSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      filter(q => q.trim().length > 2),
+      switchMap(q => {
+        this.isSearching = true;
+        return this.movieService.searchTmdb(q);
+      })
+    ).subscribe({
+      next: (res) => {
+        this.searchResults = res.results;
+        this.showDropdown = this.searchResults.length > 0;
+        this.isSearching = false;
+      },
+      error: () => {
+        this.isSearching = false;
+        this.searchResults = [];
+        this.showDropdown = false;
+      }
+    });
+  }
+
+  onSearchInput(value: string): void {
+    this.searchQuery = value;
+    this.tmdbError = null;
+    this.dbResult = null;
+
+    const imdbId = this.extractImdbId(value);
+    if (imdbId) {
+      this.showDropdown = false;
+      this.searchResults = [];
+      this.lookupByImdbId(imdbId);
+      return;
+    }
+
+    if (value.trim().length <= 2) {
+      this.showDropdown = false;
+      this.searchResults = [];
+      return;
+    }
+
+    this.searchSubject.next(value);
+  }
+
+  selectSearchResult(result: MovieSearchResult): void {
+    this.showDropdown = false;
+    this.searchQuery = result.title;
+    this.lookupByImdbId(result.imdbId);
   }
 
   extractImdbId(link: string): string | null {
     const match = link.match(/tt\d+/);
     return match ? match[0] : null;
+  }
+
+  lookupByImdbId(imdbId: string): void {
+    this.posterPreview = null;
+    this.tmdbError = null;
+    this.dbResult = null;
+    this.isLoadingTmdb = true;
+
+    this.movieService.findByImdbId(imdbId).subscribe({
+      next: (movie: TmdbMovieResult) => {
+        this.form.patchValue({
+          imdbLink: `https://www.imdb.com/title/${imdbId}/`,
+          title: movie.title,
+          description: movie.description,
+          posterUrl: movie.posterUrl,
+          director: movie.director,
+          releaseDate: movie.releaseDate,
+          runtime: movie.runtime,
+          genres: movie.genres
+        });
+        this.posterPreview = movie.posterUrl;
+        this.isLoadingTmdb = false;
+      },
+      error: (err) => {
+        this.isLoadingTmdb = false;
+        if (err.status === 404) {
+          this.tmdbError = 'Movie not found. Please check the IMDB link and try again.';
+        } else if (err.status === 500) {
+          this.tmdbError = 'Something went wrong on our end. Please try again later.';
+        } else {
+          this.tmdbError = 'Something went wrong. Please try again.';
+        }
+      }
+    });
   }
 
   getFromDb(): void {
@@ -90,6 +184,7 @@ export class AddMovieComponent implements OnInit {
           watchedByJohan: movie.watchedByJohan
         });
         this.posterPreview = movie.posterUrl;
+        this.searchQuery = movie.title;
         this.isLoadingDb = false;
         if (isManual) {
           this.dbResult = 'Loaded from database.';
@@ -105,48 +200,6 @@ export class AddMovieComponent implements OnInit {
           }
         } else {
           this.dbResult = 'Failed to load movie details.';
-        }
-      }
-    });
-  }
-
-  lookupMovie(): void {
-    this.posterPreview = null;
-    this.tmdbError = null;
-    this.dbResult = null;
-    this.isLoadingTmdb = true;
-
-    const link = this.form.get('imdbLink')?.value;
-    const imdbId = this.extractImdbId(link);
-
-    if (!imdbId) {
-      this.tmdbError = 'Could not extract a valid IMDB ID from that link.';
-      this.isLoadingTmdb = false;
-      return;
-    }
-
-    this.movieService.findByImdbId(imdbId).subscribe({
-      next: (movie: TmdbMovieResult) => {
-        this.form.patchValue({
-          title: movie.title,
-          description: movie.description,
-          posterUrl: movie.posterUrl,
-          director: movie.director,
-          releaseDate: movie.releaseDate,
-          runtime: movie.runtime,
-          genres: movie.genres
-        });
-        this.posterPreview = movie.posterUrl;
-        this.isLoadingTmdb = false;
-      },
-      error: (err) => {
-        this.isLoadingTmdb = false;
-        if (err.status === 404) {
-          this.tmdbError = 'Movie not found. Please check the IMDB link and try again.';
-        } else if (err.status === 500) {
-          this.tmdbError = 'Something went wrong on our end. Please try again later.';
-        } else {
-          this.tmdbError = 'Something went wrong. Please try again.';
         }
       }
     });
@@ -187,5 +240,17 @@ export class AddMovieComponent implements OnInit {
 
   cancel(): void {
     this.router.navigate(['/movies']);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      this.showDropdown = false;
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscapeKey(): void {
+    this.showDropdown = false;
   }
 }

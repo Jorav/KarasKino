@@ -13,6 +13,9 @@ public class TmdbMovieDetailsResponse
   [JsonPropertyName("poster_path")]
   public string? PosterPath { get; set; }
 
+  [JsonPropertyName("imdb_id")]
+  public string? ImdbId { get; set; }
+
   private string? _rawReleaseDate;
 
   [JsonPropertyName("release_date")]

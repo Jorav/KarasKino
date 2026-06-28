@@ -54,6 +54,18 @@ export interface MovieListItem {
   watchedByJohan: boolean;
 }
 
+export interface MovieSearchResult {
+  imdbId: string;
+  title: string;
+  director: string | null;
+  releaseYear: string | null;
+  posterUrl: string | null;
+}
+
+export interface SearchTmdbMoviesResult {
+  results: MovieSearchResult[];
+}
+
 export interface PagedMoviesResult {
   items: MovieListItem[];
   totalCount: number;
@@ -79,6 +91,11 @@ export class MovieService {
   }
   getByImdbId(imdbId: string): Observable<SavedMovieResult> {
     return this.http.get<SavedMovieResult>(`${this.apiUrl}/movies/${imdbId}`);
+  }
+  searchTmdb(query: string): Observable<SearchTmdbMoviesResult> {
+    return this.http.get<SearchTmdbMoviesResult>(`${this.apiUrl}/movies/search-tmdb`, {
+      params: { query }
+    });
   }
   getMovies(page: number, pageSize: number, search?: string): Observable<PagedMoviesResult> {
     let params: any = { page, pageSize };
