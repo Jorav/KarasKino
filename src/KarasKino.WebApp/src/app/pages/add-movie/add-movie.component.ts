@@ -2,7 +2,7 @@ import { Component, OnInit, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, filter } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, filter, tap } from 'rxjs/operators';
 import { MovieService, TmdbMovieResult, MovieSearchResult } from '../../services/movie.service';
 import { MovieFormComponent, MovieFormValue } from '../../components/movie-form/movie-form.component';
 
@@ -38,25 +38,24 @@ export class AddMovieComponent implements OnInit {
 
   ngOnInit(): void {
     this.searchSubject.pipe(
-      debounceTime(300),
+      debounceTime(400),
       distinctUntilChanged(),
       filter(q => q.trim().length > 2),
-      switchMap(q => {
-        this.isSearching = true;
-        return this.movieService.searchTmdb(q);
-      })
-    ).subscribe({
-      next: (res) => {
-        this.searchResults = res.results;
-        this.showDropdown = this.searchResults.length > 0;
-        this.isSearching = false;
-      },
-      error: () => {
-        this.isSearching = false;
-        this.searchResults = [];
-        this.showDropdown = false;
-      }
-    });
+      tap(() => this.isSearching = true),
+      switchMap(q => this.movieService.searchTmdb(q))
+    )
+      .subscribe({
+        next: (res) => {
+          this.searchResults = res.results;
+          this.showDropdown = this.searchResults.length > 0;
+          this.isSearching = false;
+        },
+        error: () => {
+          this.isSearching = false;
+          this.searchResults = [];
+          this.showDropdown = false;
+        }
+      });
   }
 
   @HostListener('document:click', ['$event'])
@@ -88,7 +87,7 @@ export class AddMovieComponent implements OnInit {
       return;
     }
 
-    if (value.trim().length <= 2) {
+    if (value.trim().length <= 3) {
       this.showDropdown = false;
       this.searchResults = [];
       return;
