@@ -1,5 +1,6 @@
 ﻿using Ardalis.ListStartupServices;
 using KarasKino.Infrastructure.Data;
+using Microsoft.AspNetCore.HttpOverrides;
 using Scalar.AspNetCore;
 
 namespace KarasKino.Api.Configurations;
@@ -8,24 +9,30 @@ public static class MiddlewareConfig
 {
   public static async Task<IApplicationBuilder> UseAppMiddlewareAndSeedDatabase(this WebApplication app)
   {
+    var forwardedHeadersOptions = new ForwardedHeadersOptions
+    {
+      ForwardedHeaders =
+            ForwardedHeaders.XForwardedFor |
+            ForwardedHeaders.XForwardedProto |
+            ForwardedHeaders.XForwardedHost
+    };
+    forwardedHeadersOptions.KnownIPNetworks.Clear();
+    forwardedHeadersOptions.KnownProxies.Clear();
+
+    app.UseForwardedHeaders(forwardedHeadersOptions);
+
+    app.UseHttpsRedirection();
+
     if (app.Environment.IsDevelopment())
     {
       app.UseDeveloperExceptionPage();
       app.UseShowAllServicesMiddleware();
     }
     else
-    {   
+    {
       app.UseDefaultExceptionHandler(); // from FastEndpoints
       app.UseHsts();
     }
-
-    app.UseAuthentication();
-    app.UseAuthorization();
-
-    app.UseFastEndpoints(c =>
-    {
-      c.Endpoints.RoutePrefix = "api";
-    });
 
     if (app.Environment.IsDevelopment())
     {
@@ -38,7 +45,7 @@ public static class MiddlewareConfig
         settings.Path = "/swagger";
         settings.DocumentPath = "/openapi/{documentName}.json";
       });
-  
+
       app.MapScalarApiReference(options =>
       {
         options.WithTitle("Clean Architecture API");
@@ -46,11 +53,16 @@ public static class MiddlewareConfig
       });
     }
 
-    app.UseHttpsRedirection(); // Note this will drop Authorization headers
+    app.UseAuthentication();
+    app.UseAuthorization();
 
-    var shouldMigrate = app.Environment.IsDevelopment() || 
+    app.UseFastEndpoints(c =>
+    {
+    });
+
+    var shouldMigrate = app.Environment.IsDevelopment() ||
                         app.Configuration.GetValue<bool>("Database:ApplyMigrationsOnStartup");
-    
+
     if (shouldMigrate)
     {
       await MigrateDatabaseAsync(app);
