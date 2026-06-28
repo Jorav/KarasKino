@@ -49,27 +49,27 @@ public class TmdbService(TmdbClient tmdbClient, IOptions<TmdbConfiguration> conf
 
     var topResults = searchResponse.Results
       .OrderByDescending(r => r.Popularity)
-      .Take(5)
+      .Take(4)
       .ToList();
 
-    var detailTasks = topResults.Select(async r =>
+    var detailTasks = topResults.Select(async result =>
     {
-      var details = await tmdbClient.GetMovieDetails(r.Id, ct);
+      var details = await tmdbClient.GetMovieDetails(result.Id, ct);
       if (details == null)
         return null;
 
       var director = details.Credits.Crew
         .FirstOrDefault(c => c.Job == "Director")?.Name;
 
-      var posterUrl = r.PosterPath != null
-        ? $"{_config.ImageBaseUrl}{r.PosterPath}"
+      var posterUrl = details.PosterPath != null
+        ? $"{_config.ImageBaseUrl}{details.PosterPath}"
         : null;
 
       return new MovieSearchResult(
-        details.ImdbId ?? string.Empty,
-        r.Title,
+        details.ImdbId,
+        details.Title,
         director,
-        r.ReleaseDate?.Length >= 4 ? r.ReleaseDate[..4] : null,
+        details.ReleaseDate?.Year.ToString(),
         posterUrl);
     });
 
