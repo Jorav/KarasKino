@@ -1,3 +1,7 @@
+﻿using KarasKino.Application.Movies.Delete;
+using KarasKino.Core.Users;
+using Microsoft.AspNetCore.Http.HttpResults;
+
 namespace KarasKino.Api.Movies.Delete;
 
 public class DeleteMovie(IMediator mediator)

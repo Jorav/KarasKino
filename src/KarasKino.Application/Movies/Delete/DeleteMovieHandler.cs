@@ -1,3 +1,6 @@
+﻿using KarasKino.Core.Interfaces;
+using KarasKino.Core.Movies;
+
 namespace KarasKino.Application.Movies.Delete;
 
 public class DeleteMovieHandler(IRepository<Movie> movies)

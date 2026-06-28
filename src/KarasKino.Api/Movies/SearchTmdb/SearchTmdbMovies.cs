@@ -1,3 +1,6 @@
+﻿using KarasKino.Application.Movies.SearchTmdb;
+using Microsoft.AspNetCore.Http.HttpResults;
+
 namespace KarasKino.Api.Movies.SearchTmdb;
 
 public class SearchTmdbMovies(IMediator mediator)

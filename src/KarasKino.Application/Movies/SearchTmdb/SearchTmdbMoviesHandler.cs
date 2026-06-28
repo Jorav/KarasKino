@@ -1,3 +1,5 @@
+﻿using KarasKino.Application.Movies.FindByImdbId;
+
 namespace KarasKino.Application.Movies.SearchTmdb;
 
 public class SearchTmdbMoviesHandler(ITmdbService tmdbService)

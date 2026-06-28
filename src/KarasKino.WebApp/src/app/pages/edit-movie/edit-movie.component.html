@@ -1,0 +1,16 @@
+<div class="edit-movie">
+  <h1 class="edit-movie__title">Edit Movie</h1>
+
+  <div class="edit-movie__loading" *ngIf="isLoading">Loading...</div>
+  <div class="edit-movie__error" *ngIf="loadError">{{ loadError }}</div>
+
+  <app-movie-form *ngIf="!isLoading && !loadError"
+                  [initialValue]="formInitialValue"
+                  [posterPreview]="posterPreview"
+                  [isSaving]="isSaving"
+                  [saveError]="saveError"
+                  saveButtonLabel="Save Changes"
+                  (save)="onSave($event)"
+                  (cancel)="onCancel()">
+  </app-movie-form>
+</div>

@@ -1,0 +1,30 @@
+$color-text: #f0f0f0;
+$color-text-muted: #888;
+$color-accent: #e50914;
+
+.edit-movie {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0.5rem 1.5rem;
+  color: $color-text;
+  font-family: 'Segoe UI', sans-serif;
+
+  &__title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+  }
+
+  &__loading {
+    text-align: center;
+    padding: 3rem;
+    color: $color-text-muted;
+  }
+
+  &__error {
+    text-align: center;
+    padding: 3rem;
+    color: $color-accent;
+  }
+}
