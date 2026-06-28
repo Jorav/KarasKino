@@ -9,23 +9,26 @@ public static class MiddlewareConfig
 {
   public static async Task<IApplicationBuilder> UseAppMiddlewareAndSeedDatabase(this WebApplication app)
   {
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+      ForwardedHeaders =
+        ForwardedHeaders.XForwardedFor |
+        ForwardedHeaders.XForwardedProto,
+      ForwardedHostHeaderName = "X-Forwarded-Host"
+    });
+
+    app.UseHttpsRedirection();
+
     if (app.Environment.IsDevelopment())
     {
       app.UseDeveloperExceptionPage();
       app.UseShowAllServicesMiddleware();
     }
     else
-    {   
+    {
       app.UseDefaultExceptionHandler(); // from FastEndpoints
       app.UseHsts();
     }
-
-    app.UseAuthentication();
-    app.UseAuthorization();
-
-    app.UseFastEndpoints(c =>
-    {
-    });
 
     if (app.Environment.IsDevelopment())
     {
@@ -38,7 +41,7 @@ public static class MiddlewareConfig
         settings.Path = "/swagger";
         settings.DocumentPath = "/openapi/{documentName}.json";
       });
-  
+
       app.MapScalarApiReference(options =>
       {
         options.WithTitle("Clean Architecture API");
@@ -46,16 +49,16 @@ public static class MiddlewareConfig
       });
     }
 
-    app.UseForwardedHeaders(new ForwardedHeadersOptions
-    {
-      ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
-      ForwardedHostHeaderName = "X-Forwarded-Host"
-    });
-    app.UseHttpsRedirection(); // Note this will drop Authorization headers
+    app.UseAuthentication();
+    app.UseAuthorization();
 
-    var shouldMigrate = app.Environment.IsDevelopment() || 
+    app.UseFastEndpoints(c =>
+    {
+    });
+
+    var shouldMigrate = app.Environment.IsDevelopment() ||
                         app.Configuration.GetValue<bool>("Database:ApplyMigrationsOnStartup");
-    
+
     if (shouldMigrate)
     {
       await MigrateDatabaseAsync(app);
