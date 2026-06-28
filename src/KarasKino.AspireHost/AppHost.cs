@@ -1,4 +1,5 @@
 ﻿using System.Net.Sockets;
+using Microsoft.Extensions.Configuration;
 
 var builder = DistributedApplication.CreateBuilder(args);
 
@@ -24,19 +25,24 @@ var papercut = builder.AddContainer("papercut", "jijiechen/papercut", "latest")
     e.UriScheme = "http";
   });
 
+var frontendPort = builder.Configuration.GetValue<int>("Ports:Frontend");
+var apiPort = builder.Configuration.GetValue<int>("Ports:Api");
+
+var frontend = builder.AddNpmApp("frontend", "../KarasKino.WebApp")
+    .WithHttpEndpoint(port: frontendPort, env: "PORT")
+    .WithExternalHttpEndpoints();
+
 // Add the web project with the database connection
 var api = builder.AddProject<Projects.KarasKino_Api>("api")
   .WithReference(karasKinoDb)
+  .WithEnvironment("FrontendUrl", frontend.GetEndpoint("http"))
   .WithEnvironment("ASPNETCORE_ENVIRONMENT", builder.Environment.EnvironmentName)
   .WithEnvironment("Papercut__Smtp__Url", papercut.GetEndpoint("smtp"))
   .WithEnvironment("SecretsPath", Path.Combine(builder.AppHostDirectory, "..", "..", "secrets", "local.secrets.json"))
   .WaitFor(karasKinoDb)
   .WaitFor(papercut);
 
-builder.AddNpmApp("frontend", "../KarasKino.WebApp")
-    .WithReference(api)
-    .WithHttpEndpoint(env: "PORT")
-    .WithExternalHttpEndpoints();
+frontend.WithReference(api);
 
 builder
   .Build()

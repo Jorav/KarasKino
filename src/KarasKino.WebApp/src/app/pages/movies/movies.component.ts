@@ -5,6 +5,8 @@ import { RouterModule } from '@angular/router';
 import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { MovieService, MovieListItem } from '../../services/movie.service';
+import { inject } from '@angular/core';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-movies',
@@ -14,6 +16,7 @@ import { MovieService, MovieListItem } from '../../services/movie.service';
   styleUrls: ['./movies.component.scss']
 })
 export class MoviesComponent implements OnInit, OnDestroy {
+  auth = inject(AuthService);
   movies: MovieListItem[] = [];
   search = '';
   page = 1;

@@ -1,3 +1,10 @@
 <header class="app-header">
   <a routerLink="/movies" class="app-header__logo">KarasKino</a>
+  <div class="app-header__actions">
+    <ng-container *ngIf="auth.currentUser()">
+      <span class="app-header__user">{{ auth.currentUser()?.email }}</span>
+      <button class="app-header__logout" (click)="logout()">Sign out</button>
+    </ng-container>
+    <a *ngIf="!auth.currentUser()" routerLink="/login" class="app-header__login">Sign in</a>
+  </div>
 </header>

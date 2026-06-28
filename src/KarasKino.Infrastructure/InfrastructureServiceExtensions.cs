@@ -32,7 +32,7 @@ public static class InfrastructureServiceExtensions
     services.AddScoped(typeof(Core.Interfaces.IRepository<>), typeof(Repository<>))
             .AddScoped(typeof(IRepositoryBase<>), typeof(AppRepository<>));
     services.AddMovieServices(config);
-
+    services.AddAuthenticationServices(config);
     logger.LogInformation("{Project} services registered", "Infrastructure");
 
     return services;

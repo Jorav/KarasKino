@@ -11,13 +11,16 @@ public static class MiddlewareConfig
     if (app.Environment.IsDevelopment())
     {
       app.UseDeveloperExceptionPage();
-      app.UseShowAllServicesMiddleware(); // see https://github.com/ardalis/AspNetCoreStartupServices
+      app.UseShowAllServicesMiddleware();
     }
     else
     {   
       app.UseDefaultExceptionHandler(); // from FastEndpoints
       app.UseHsts();
     }
+
+    app.UseAuthentication();
+    app.UseAuthorization();
 
     app.UseFastEndpoints(c =>
     {

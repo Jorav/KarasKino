@@ -1,10 +1,13 @@
 .app-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
   padding: 1.25rem 1.5rem 0.75rem;
-  text-align: center;
   border-bottom: 1px solid #222;
   margin-bottom: 1.25rem;
 
   &__logo {
+    grid-column: 2;
     font-size: 2.25rem;
     font-weight: 800;
     color: #e50914;
@@ -14,6 +17,36 @@
 
     &:hover {
       color: #f40612;
+    }
+  }
+
+  &__actions {
+    grid-column: 3;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 1rem;
+  }
+
+  &__user {
+    font-size: 0.85rem;
+    color: #888;
+  }
+
+  &__logout, &__login {
+    font-size: 0.85rem;
+    color: #f0f0f0;
+    background: none;
+    border: 1px solid #333;
+    border-radius: 4px;
+    padding: 0.3rem 0.75rem;
+    cursor: pointer;
+    text-decoration: none;
+    font-family: 'Segoe UI', sans-serif;
+
+    &:hover {
+      border-color: #e50914;
+      color: #e50914;
     }
   }
 }

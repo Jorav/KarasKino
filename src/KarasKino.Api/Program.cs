@@ -5,8 +5,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddServiceDefaults()
        .AddLoggerConfigs();
 
-var secretsPath = builder.Configuration["SecretsPath"];
-if (!string.IsNullOrEmpty(secretsPath))
+var secretsPath = builder.Configuration["SecretsPath"]
+  ?? Path.Combine(builder.Environment.ContentRootPath, "..", "..", "secrets", "local.secrets.json");
+
+if (File.Exists(secretsPath))
 {
   builder.Configuration.AddJsonFile(secretsPath, optional: true, reloadOnChange: false);
 }
@@ -32,7 +34,7 @@ builder.Services.AddCors(options =>
     var allowedOrigins = builder.Configuration["AllowedOrigins"] ?? "*";
     policy.WithOrigins(allowedOrigins.Split(','))
           .AllowAnyHeader()
-          .AllowAnyMethod();
+          .AllowAnyMethod().AllowCredentials();
   });
 });
 
