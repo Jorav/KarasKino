@@ -1,5 +1,6 @@
 ﻿using Ardalis.ListStartupServices;
 using KarasKino.Infrastructure.Data;
+using Microsoft.AspNetCore.HttpOverrides;
 using Scalar.AspNetCore;
 
 namespace KarasKino.Api.Configurations;
@@ -45,6 +46,11 @@ public static class MiddlewareConfig
       });
     }
 
+    app.UseForwardedHeaders(new ForwardedHeadersOptions
+    {
+      ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
+      ForwardedHostHeaderName = "X-Forwarded-Host"
+    });
     app.UseHttpsRedirection(); // Note this will drop Authorization headers
 
     var shouldMigrate = app.Environment.IsDevelopment() || 
