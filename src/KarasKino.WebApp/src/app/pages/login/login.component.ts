@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 
+type LoginStep = 'email' | 'password' | 'register' | 'google-only';
 
 @Component({
   selector: 'app-login',
@@ -13,57 +14,110 @@ import { AuthService } from '../../services/auth/auth.service';
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent {
-  form: FormGroup;
+  step: LoginStep = 'email';
+  lockedEmail = '';
   isLoading = false;
   error: string | null = null;
-  isRegister = false;
+  googleLoginUrl = '/api/authentication/google';
+
+  emailForm: FormGroup;
+  passwordForm: FormGroup;
+  registerForm: FormGroup;
 
   constructor(
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router
   ) {
-    this.form = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+    this.emailForm = this.fb.group({
+      email: ['', [Validators.required, Validators.email]]
+    });
+
+    this.passwordForm = this.fb.group({
       password: ['', Validators.required]
     });
+
+    this.registerForm = this.fb.group({
+      password: ['', Validators.required],
+      confirmPassword: ['', Validators.required]
+    }, { validators: this.passwordsMatch });
   }
 
-  toggleMode(): void {
-    this.isRegister = !this.isRegister;
-    this.error = null;
+  passwordsMatch(group: FormGroup): { [key: string]: boolean } | null {
+    const password = group.get('password')?.value;
+    const confirm = group.get('confirmPassword')?.value;
+    return password === confirm ? null : { mismatch: true };
   }
 
-  submit(): void {
-    if (this.form.invalid || this.isLoading) return;
+  continueWithEmail(): void {
+    if (this.emailForm.invalid || this.isLoading) return;
     this.isLoading = true;
     this.error = null;
 
-    const { email, password } = this.form.value;
-    const action$ = this.isRegister
-      ? this.auth.register(email, password)
-      : this.auth.login(email, password);
+    const email = this.emailForm.get('email')?.value;
 
-    action$.subscribe({
-      next: () => {
-        if (this.isRegister) {
-          this.error = 'Registered successfully. You can now log in.';
-          this.isRegister = false;
-        } else {
-          this.router.navigate(['/movies']);
-        }
+    this.auth.checkEmail(email).subscribe({
+      next: (result) => {
+        this.lockedEmail = email;
         this.isLoading = false;
+
+        if (!result.exists) {
+          this.step = 'register';
+        } else if (result.hasPassword) {
+          this.step = 'password';
+        } else {
+          this.step = 'google-only';
+        }
       },
+      error: () => {
+        this.isLoading = false;
+        this.error = 'Something went wrong. Please try again.';
+      }
+    });
+  }
+
+  signIn(): void {
+    if (this.passwordForm.invalid || this.isLoading) return;
+    this.isLoading = true;
+    this.error = null;
+
+    this.auth.login(this.lockedEmail, this.passwordForm.get('password')?.value).subscribe({
+      next: () => this.router.navigate(['/movies']),
       error: (err) => {
         this.isLoading = false;
-        if (err.status === 401) this.error = 'Invalid email or password.';
-        else if (err.status === 409) this.error = 'Email already registered.';
+        if (err.status === 401) this.error = 'Incorrect password.';
         else this.error = 'Something went wrong. Please try again.';
       }
     });
   }
 
-  loginWithGoogle(): void {
-    this.auth.loginWithGoogle();
+  register(): void {
+    if (this.registerForm.invalid || this.isLoading) return;
+    this.isLoading = true;
+    this.error = null;
+
+    this.auth.register(this.lockedEmail, this.registerForm.get('password')?.value).subscribe({
+      next: () => {
+        this.auth.login(this.lockedEmail, this.registerForm.get('password')?.value).subscribe({
+          next: () => this.router.navigate(['/movies']),
+          error: () => {
+            this.isLoading = false;
+            this.error = 'Registered but could not log in. Please try signing in.';
+          }
+        });
+      },
+      error: (err) => {
+        this.isLoading = false;
+        if (err.status === 409) this.error = 'An account with this email already exists.';
+        else this.error = 'Something went wrong. Please try again.';
+      }
+    });
+  }
+
+  back(): void {
+    this.step = 'email';
+    this.error = null;
+    this.passwordForm.reset();
+    this.registerForm.reset();
   }
 }

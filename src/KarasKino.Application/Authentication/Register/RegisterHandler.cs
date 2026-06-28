@@ -7,14 +7,21 @@ public class RegisterHandler(IRepository<User> users) : ICommandHandler<Register
 {
   public async ValueTask<Result<Guid>> Handle(RegisterCommand cmd, CancellationToken ct)
   {
-    var existingSpec = new UserByEmailSpecification(cmd.Email);
-    var existing = await users.FirstOrDefaultAsync(existingSpec, ct);
+    var spec = new UserByEmailSpecification(cmd.Email);
+    var existing = await users.FirstOrDefaultAsync(spec, ct);
+
     if (existing is not null)
-      return Result.Conflict();
+    {
+      if (existing.HasLocalLogin)
+        return Result.Conflict();
+
+      existing.SetPassword(BCrypt.Net.BCrypt.HashPassword(cmd.Password));
+      await users.SaveChangesAsync(ct);
+      return Result.Success(existing.Id);
+    }
 
     var user = new User(cmd.Email);
     user.SetPassword(BCrypt.Net.BCrypt.HashPassword(cmd.Password));
-
     await users.AddAsync(user, ct);
     await users.SaveChangesAsync(ct);
 

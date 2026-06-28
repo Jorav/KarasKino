@@ -10,6 +10,11 @@ export interface AuthUser {
   role: UserRole;
 }
 
+export interface EmailCheckResult {
+  exists: boolean;
+  hasPassword: boolean;
+}
+
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly apiUrl = environment.apiBaseUrl;
@@ -50,5 +55,13 @@ export class AuthService {
   canEdit(): boolean {
     const role = this.currentUser()?.role;
     return role === 'Editor' || role === 'Admin';
+  }
+
+  checkEmail(email: string): Observable<EmailCheckResult> {
+    return this.http.post<EmailCheckResult>(
+      `${this.apiUrl}/authentication/check-email`,
+      { email },
+      { withCredentials: true }
+    );
   }
 }

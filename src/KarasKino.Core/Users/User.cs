@@ -17,6 +17,7 @@ public class User : Entity
   public UserRole Role { get; private set; } = UserRole.Viewer;
   public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
 
+  public bool HasLocalLogin => PasswordHash is not null;
   public void SetPassword(string passwordHash) => PasswordHash = passwordHash;
   public void SetRole(UserRole role) => Role = role;
 }

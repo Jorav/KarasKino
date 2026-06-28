@@ -1,34 +1,86 @@
 <div class="login">
-  <h1 class="login__title">{{ isRegister ? 'Register' : 'Sign In' }}</h1>
 
-  <form [formGroup]="form" (ngSubmit)="submit()">
-    <div class="login__field">
-      <label for="email">Email</label>
-      <input id="email" formControlName="email" type="email" placeholder="you@example.com" />
+  <!-- Step 1: Email -->
+  <ng-container *ngIf="step === 'email'">
+    <h1 class="login__title">Sign In</h1>
+    <form [formGroup]="emailForm" (ngSubmit)="continueWithEmail()">
+      <div class="login__field">
+        <label for="email">Email</label>
+        <input id="email" formControlName="email" type="email" placeholder="you@example.com" />
+      </div>
+      <span class="login__error" *ngIf="error">{{ error }}</span>
+      <div class="login__actions">
+        <button type="submit" class="btn btn--primary" [disabled]="emailForm.invalid || isLoading">
+          {{ isLoading ? 'Checking...' : 'Continue' }}
+        </button>
+      </div>
+    </form>
+    <div class="login__divider">or</div>
+    <a [href]="googleLoginUrl" class="btn btn--google">Sign in with Google</a>
+  </ng-container>
+
+  <!-- Step 2a: Existing user with password -->
+  <ng-container *ngIf="step === 'password'">
+    <h1 class="login__title">Sign In</h1>
+    <div class="login__locked-email">
+      <span>{{ lockedEmail }}</span>
+      <button class="login__change" (click)="back()">Change</button>
     </div>
+    <form [formGroup]="passwordForm" (ngSubmit)="signIn()">
+      <div class="login__field">
+        <label for="password">Password</label>
+        <input id="password" formControlName="password" type="password" placeholder="" autofocus />
+      </div>
+      <span class="login__error" *ngIf="error">{{ error }}</span>
+      <div class="login__actions">
+        <button type="submit" class="btn btn--primary" [disabled]="passwordForm.invalid || isLoading">
+          {{ isLoading ? 'Signing in...' : 'Sign In' }}
+        </button>
+      </div>
+    </form>
+    <div class="login__divider">or</div>
+    <a [href]="googleLoginUrl" class="btn btn--google">Sign in with Google</a>
+  </ng-container>
 
-    <div class="login__field">
-      <label for="password">Password</label>
-      <input id="password" formControlName="password" type="password" placeholder="••••••••" />
+  <!-- Step 2b: Existing user without password (Google only) -->
+  <ng-container *ngIf="step === 'google-only'">
+    <h1 class="login__title">Sign In</h1>
+    <div class="login__locked-email">
+      <span>{{ lockedEmail }}</span>
+      <button class="login__change" (click)="back()">Change</button>
     </div>
+    <p class="login__info">This account uses Google sign-in.</p>
+    <a [href]="googleLoginUrl" class="btn btn--google">Sign in with Google</a>
+  </ng-container>
 
-    <span class="login__error" *ngIf="error">{{ error }}</span>
-
-    <div class="login__actions">
-      <button type="submit" class="btn btn--primary" [disabled]="form.invalid || isLoading">
-        {{ isLoading ? 'Please wait...' : (isRegister ? 'Register' : 'Sign In') }}
-      </button>
+  <!-- Step 2c: New user -->
+  <ng-container *ngIf="step === 'register'">
+    <h1 class="login__title">Create Account</h1>
+    <div class="login__locked-email">
+      <span>{{ lockedEmail }}</span>
+      <button class="login__change" (click)="back()">Change</button>
     </div>
-  </form>
+    <form [formGroup]="registerForm" (ngSubmit)="register()">
+      <div class="login__field">
+        <label for="reg-password">Password</label>
+        <input id="reg-password" formControlName="password" type="password" placeholder="" autofocus />
+      </div>
+      <div class="login__field">
+        <label for="confirm-password">Confirm Password</label>
+        <input id="confirm-password" formControlName="confirmPassword" type="password" placeholder="" />
+      </div>
+      <span class="login__error" *ngIf="registerForm.errors?.['mismatch'] && registerForm.get('confirmPassword')?.touched">
+        Passwords do not match.
+      </span>
+      <span class="login__error" *ngIf="error">{{ error }}</span>
+      <div class="login__actions">
+        <button type="submit" class="btn btn--primary" [disabled]="registerForm.invalid || isLoading">
+          {{ isLoading ? 'Creating account...' : 'Create Account' }}
+        </button>
+      </div>
+    </form>
+    <div class="login__divider">or</div>
+    <a [href]="googleLoginUrl" class="btn btn--google">Register with Google</a>
+  </ng-container>
 
-  <div class="login__divider">or</div>
-
-  <button class="btn btn--google" (click)="loginWithGoogle()">
-    Sign in with Google
-  </button>
-
-  <p class="login__toggle">
-    {{ isRegister ? 'Already have an account?' : "Don't have an account?" }}
-    <a (click)="toggleMode()">{{ isRegister ? 'Sign in' : 'Register' }}</a>
-  </p>
 </div>
