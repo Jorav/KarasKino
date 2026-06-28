@@ -18,7 +18,6 @@ export class LoginComponent {
   lockedEmail = '';
   isLoading = false;
   error: string | null = null;
-  googleLoginUrl = '/api/authentication/google';
 
   emailForm: FormGroup;
   passwordForm: FormGroup;
@@ -119,5 +118,9 @@ export class LoginComponent {
     this.error = null;
     this.passwordForm.reset();
     this.registerForm.reset();
+  }
+
+  loginWithGoogle(): void {
+    this.auth.loginWithGoogle();
   }
 }

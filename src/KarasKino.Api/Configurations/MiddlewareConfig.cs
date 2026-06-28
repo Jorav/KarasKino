@@ -24,7 +24,6 @@ public static class MiddlewareConfig
 
     app.UseFastEndpoints(c =>
     {
-      c.Endpoints.RoutePrefix = "api";
     });
 
     if (app.Environment.IsDevelopment())

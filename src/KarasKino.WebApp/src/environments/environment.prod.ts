@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://karaskino.ravnborg.se/api'
+  apiBaseUrl: 'https://api.karaskino.ravnborg.se'
 };

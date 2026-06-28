@@ -16,7 +16,7 @@
       </div>
     </form>
     <div class="login__divider">or</div>
-    <a [href]="googleLoginUrl" class="btn btn--google">Sign in with Google</a>
+    <button type="button" class="btn btn--google" (click)="loginWithGoogle()">Sign in with Google</button>
   </ng-container>
 
   <!-- Step 2a: Existing user with password -->
@@ -39,7 +39,7 @@
       </div>
     </form>
     <div class="login__divider">or</div>
-    <a [href]="googleLoginUrl" class="btn btn--google">Sign in with Google</a>
+    <button type="button" class="btn btn--google" (click)="loginWithGoogle()">Sign in with Google</button>
   </ng-container>
 
   <!-- Step 2b: Existing user without password (Google only) -->
@@ -50,7 +50,7 @@
       <button class="login__change" (click)="back()">Change</button>
     </div>
     <p class="login__info">This account uses Google sign-in.</p>
-    <a [href]="googleLoginUrl" class="btn btn--google">Sign in with Google</a>
+    <button type="button" class="btn btn--google" (click)="loginWithGoogle()">Sign in with Google</button>
   </ng-container>
 
   <!-- Step 2c: New user -->
@@ -80,7 +80,7 @@
       </div>
     </form>
     <div class="login__divider">or</div>
-    <a [href]="googleLoginUrl" class="btn btn--google">Register with Google</a>
+    <button type="button" class="btn btn--google" (click)="loginWithGoogle()">Register with Google</button>
   </ng-container>
 
 </div>

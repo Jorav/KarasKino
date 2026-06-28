@@ -16,7 +16,7 @@ public class GoogleLoginEndpoint : EndpointWithoutRequest
   {
     await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties
     {
-      RedirectUri = "/api/authentication/google/callback"
+      RedirectUri = "/authentication/google/callback"
     });
     await HttpContext.Response.CompleteAsync();
     return null;

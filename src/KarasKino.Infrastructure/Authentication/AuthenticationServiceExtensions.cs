@@ -37,6 +37,7 @@ public static class AuthenticationServiceExtensions
       options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
       options.Cookie.HttpOnly = true;
       options.Cookie.Path = "/";
+      options.Cookie.Domain = config["Auth:CookieDomain"];
     })
     .AddJwtBearer(options =>
     {
@@ -64,7 +65,7 @@ public static class AuthenticationServiceExtensions
     {
       options.ClientId = config["Google:ClientId"]!;
       options.ClientSecret = config["Google:ClientSecret"]!;
-      options.CallbackPath = "/api/authentication/google/redirect";
+      options.CallbackPath = "/authentication/google/redirect";
       options.SignInScheme = "External";
       
       options.CorrelationCookie.SameSite = SameSiteMode.None;
