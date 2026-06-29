@@ -14,8 +14,9 @@
 
   <div class="movies__list">
     <div class="movie-card"
-         *ngFor="let movie of movies"
-         (click)="toggleCardActions(movie.imdbId, $event)">
+     *ngFor="let movie of movies"
+     (click)="auth.canEdit() ? toggleCardActions(movie.imdbId, $event) : null"
+     [class.movie-card--clickable]="auth.canEdit()">
       <div class="movie-card__poster">
         <img *ngIf="movie.posterUrl" [src]="movie.posterUrl" [alt]="movie.title" />
         <div *ngIf="!movie.posterUrl" class="movie-card__no-poster">No poster</div>

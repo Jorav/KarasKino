@@ -6,8 +6,8 @@ import { LoginComponent } from './pages/login/login.component';
 import { authGuard, editorGuard } from './services/auth/auth.guard';
 
 export const routes: Routes = [
-  { path: 'add-movie', component: AddMovieComponent },
-  { path: 'edit-movie/:imdbId', component: EditMovieComponent },
+  { path: 'add-movie', component: AddMovieComponent, canActivate: [editorGuard] },
+  { path: 'movies/:imdbId/edit', component: EditMovieComponent, canActivate: [editorGuard] },
   { path: 'movies', component: MoviesComponent },
   { path: 'login', component: LoginComponent },
   { path: '', redirectTo: 'movies', pathMatch: 'full' },
