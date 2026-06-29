@@ -1,10 +1,27 @@
 <header class="app-header">
   <a routerLink="/movies" class="app-header__logo">KarasKino</a>
-  <div class="app-header__actions">
-    <ng-container *ngIf="auth.currentUser()">
-      <span class="app-header__user">{{ auth.currentUser()?.email }}</span>
-      <button class="app-header__logout" (click)="logout()">Logout</button>
-    </ng-container>
-    <a *ngIf="!auth.currentUser()" routerLink="/login" class="app-header__login">Login</a>
+
+  <div class="app-header__account">
+    <button class="app-header__avatar"
+            (click)="toggleDropdown($event)"
+            [title]="auth.currentUser()?.email ?? 'Account'">
+      <span *ngIf="auth.currentUser()">{{ avatarLetter }}</span>
+      <svg *ngIf="!auth.currentUser()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="8" r="4"/>
+        <path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+      </svg>
+    </button>
+
+    <div class="app-header__dropdown" *ngIf="dropdownOpen">
+      <ng-container *ngIf="auth.currentUser()">
+        <span class="app-header__dropdown-email">{{ auth.currentUser()?.email }}</span>
+        <span class="app-header__dropdown-role">{{ auth.currentUser()?.role }}</span>
+        <hr class="app-header__dropdown-divider" />
+        <button class="app-header__dropdown-item" (click)="logout()">Logout</button>
+      </ng-container>
+      <ng-container *ngIf="!auth.currentUser()">
+        <a routerLink="/login" class="app-header__dropdown-item" (click)="dropdownOpen = false">Login</a>
+      </ng-container>
+    </div>
   </div>
 </header>
