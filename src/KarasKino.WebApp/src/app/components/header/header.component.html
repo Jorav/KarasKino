@@ -3,8 +3,8 @@
   <div class="app-header__actions">
     <ng-container *ngIf="auth.currentUser()">
       <span class="app-header__user">{{ auth.currentUser()?.email }}</span>
-      <button class="app-header__logout" (click)="logout()">Sign out</button>
+      <button class="app-header__logout" (click)="logout()">Logout</button>
     </ng-container>
-    <a *ngIf="!auth.currentUser()" routerLink="/login" class="app-header__login">Sign in</a>
+    <a *ngIf="!auth.currentUser()" routerLink="/login" class="app-header__login">Login</a>
   </div>
 </header>
