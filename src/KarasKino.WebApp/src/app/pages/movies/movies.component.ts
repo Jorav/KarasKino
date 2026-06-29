@@ -106,8 +106,9 @@ export class MoviesComponent implements OnInit, OnDestroy {
 
   editMovie(imdbId: string, event: Event): void {
     event.stopPropagation();
-    this.router.navigate(['/edit-movie', imdbId]);  }
-
+    this.router.navigate(['/movies', imdbId, 'edit']);
+  }
+  
   requestDelete(imdbId: string, event: Event): void {
     event.stopPropagation();
     this.confirmingDeleteImdbId = imdbId;
