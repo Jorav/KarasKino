@@ -70,6 +70,7 @@ public static class AuthenticationServiceExtensions
       
       options.CorrelationCookie.SameSite = SameSiteMode.None;
       options.CorrelationCookie.SecurePolicy = CookieSecurePolicy.Always;
+      options.CorrelationCookie.HttpOnly = true;
     });
 
     services.AddAuthorization();
