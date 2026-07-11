@@ -39,6 +39,6 @@ public class GoogleCallbackEndpoint(IMediator mediator, IConfiguration config)
       Path = "/"
     });
     var frontendUrl = config["FrontendUrl"];
-    return TypedResults.Redirect(frontendUrl);
+    return TypedResults.Redirect($"{frontendUrl}/oauth-callback");
   }
 }

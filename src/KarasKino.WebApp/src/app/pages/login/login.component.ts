@@ -121,6 +121,8 @@ export class LoginComponent {
   }
 
   loginWithGoogle(): void {
-    this.auth.loginWithGoogle();
+    this.auth.loginWithGoogle().subscribe({
+      next: () => this.router.navigate(['/movies'])
+    });
   }
 }

@@ -39,8 +39,23 @@ export class AuthService {
       .pipe(tap(() => this.currentUser.set(null)));
   }
 
-  loginWithGoogle(): void {
-    window.location.href = `${this.apiUrl}/authentication/google`;
+  loginWithGoogle(): Observable<void> {
+    return new Observable<void>(observer => {
+      const popup = window.open(`${this.apiUrl}/authentication/google`, 'google_login');
+      const messageListener = (event: MessageEvent) => {
+        if (event.origin !== window.location.origin) return;
+
+        if (event.data === 'oauth_success') {
+          window.removeEventListener('message', messageListener);
+          this.fetchCurrentUser().subscribe(() => {
+            observer.next();
+            observer.complete();
+          });
+        }
+      };
+
+      window.addEventListener('message', messageListener);
+    });
   }
 
   fetchCurrentUser(): Observable<AuthUser> {
