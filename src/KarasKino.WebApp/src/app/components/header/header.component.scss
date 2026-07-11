@@ -2,9 +2,10 @@
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  padding: 1.25rem 1.5rem 0.75rem;
+  padding: 1rem 1.5rem 0.75rem;
   border-bottom: 1px solid #222;
   margin-bottom: 1.25rem;
+  position: relative;
 
   &__logo {
     grid-column: 2;
@@ -20,32 +21,91 @@
     }
   }
 
-  &__actions {
+  &__account {
     grid-column: 3;
     display: flex;
-    align-items: center;
     justify-content: flex-end;
-    gap: 1rem;
+    position: relative;
   }
 
-  &__user {
+  &__avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #2a2a2a;
+    border: 1px solid #444;
+    color: #f0f0f0;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Segoe UI', sans-serif;
+    transition: border-color 0.2s;
+
+    svg {
+      width: 18px;
+      height: 18px;
+      stroke: #888;
+    }
+
+    &:hover {
+      border-color: #888;
+    }
+  }
+
+  &__dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background: #1f1f1f;
+    border: 1px solid #333;
+    border-radius: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    min-width: 200px;
+    z-index: 100;
+    padding: 0.5rem 0;
+  }
+
+  &__dropdown-email {
+    display: block;
+    padding: 0.5rem 1rem;
     font-size: 0.85rem;
-    color: #888;
+    color: #f0f0f0;
+    word-break: break-all;
   }
 
-  &__logout, &__login {
+  &__dropdown-role {
+    display: block;
+    padding: 0 1rem 0.5rem;
+    font-size: 0.75rem;
+    color: #888;
+    text-transform: capitalize;
+  }
+
+  &__dropdown-divider {
+    border: none;
+    border-top: 1px solid #333;
+    margin: 0;
+  }
+
+  &__dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.6rem 1rem;
     font-size: 0.85rem;
     color: #f0f0f0;
     background: none;
-    border: 1px solid #333;
-    border-radius: 4px;
-    padding: 0.3rem 0.75rem;
+    border: none;
+    text-align: left;
     cursor: pointer;
     text-decoration: none;
     font-family: 'Segoe UI', sans-serif;
+    box-sizing: border-box;
 
     &:hover {
-      border-color: #e50914;
+      background: #2a2a2a;
       color: #e50914;
     }
   }

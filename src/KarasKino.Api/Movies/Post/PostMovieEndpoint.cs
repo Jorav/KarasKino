@@ -1,5 +1,6 @@
 ﻿using KarasKino.Application.Movies.Post;
 using Microsoft.AspNetCore.Http.HttpResults;
+using KarasKino.Core.Users;
 
 namespace KarasKino.Api.Movies.Post;
 
@@ -11,7 +12,7 @@ public class AddMovie(IMediator mediator)
   public override void Configure()
   {
     Post(PostMovieRequest.Route);
-    AllowAnonymous();
+    Roles(UserRole.Editor.ToString(), UserRole.Admin.ToString());
     Summary(s =>
     {
       s.Summary = "Add a movie";

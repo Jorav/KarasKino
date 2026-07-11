@@ -136,11 +136,15 @@ $color-danger: #c0392b;
   border: 1px solid $color-border;
   border-radius: 8px;
   padding: 0.75rem;
-  cursor: pointer;
+  cursor: default;
   transition: border-color 0.2s;
 
-  &:hover {
-    border-color: #555;
+  &--clickable {
+    cursor: pointer;
+
+    &:hover {
+      border-color: #555;
+    }
   }
 
   &__poster {
