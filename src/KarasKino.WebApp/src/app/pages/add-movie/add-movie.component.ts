@@ -87,7 +87,7 @@ export class AddMovieComponent implements OnInit {
       return;
     }
 
-    if (value.trim().length <= 3) {
+    if (value.trim().length == 0) {
       this.showDropdown = false;
       this.searchResults = [];
       return;
