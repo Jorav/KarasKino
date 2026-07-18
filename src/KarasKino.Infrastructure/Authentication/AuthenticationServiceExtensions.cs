@@ -37,7 +37,11 @@ public static class AuthenticationServiceExtensions
       options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
       options.Cookie.HttpOnly = true;
       options.Cookie.Path = "/";
-      options.Cookie.Domain = config["Auth:CookieDomain"];
+      var cookieDomain = config["Auth:CookieDomain"];
+      if (!string.IsNullOrEmpty(cookieDomain))
+      {
+        options.Cookie.Domain = cookieDomain;
+      }
     })
     .AddJwtBearer(options =>
     {
